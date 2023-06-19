@@ -1,0 +1,20 @@
+# TG 对话 ID
+tg_chat_id: 1621366244
+# TG 机器人 Token
+tg_bot_token: 5753624040:AAE9jZQNz-kCscrxjs6UZGD2rfGIi0gRG8s
+# 全局是否使用代理 1 是 | 0 否
+use_proxy: 0
+# 访问 dmm 时是否使用代理，如果全局使用代理，则忽略该字段 1 是 | 0 否
+use_proxy_dmm: 0
+# 代理服务器地址，如果不使用代理，则忽略该字段
+proxy_addr: 
+# 是否使用 Pikpak 自动发送功能 1 是 | 0 否
+use_pikpak: 1
+# 配置 TG API，如果不使用 Pikpak 自动发送功能，则忽略以下两个字段，可在这里申请 API: https://my.telegram.org/apps
+tg_api_id: 12581928
+tg_api_hash: 9bd003806267466f904f91aa035d8991
+# 是否使用缓存 1 是 | 0 否
+use_cache: 0
+# redis 地址，如果不使用缓存，则忽略以下两个字段
+redis_host: 
+redis_port: 
