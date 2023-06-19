@@ -583,7 +583,7 @@ class BotUtils:
         # 标题
         if av_title != "":
             av_title_ch = TRANS_UTIL.trans(
-                text=av_title, from_lang="ja", to_lang="zh-CN"
+                text=av_title, from_lang="ja", to_lang="en"
             )
             if av_title_ch:
                 av_title = av_title_ch
