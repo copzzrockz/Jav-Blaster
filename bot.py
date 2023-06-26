@@ -117,21 +117,21 @@ class BotKey:
 
 
 class BotUtils:
-    """机器人工具"""
+    """Bot Utils"""
 
     def __init__(self):
         pass
 
     def send_action_typing(self):
-        """显示机器人正在处理消息"""
+        """Display typing action"""
         BOT.send_chat_action(chat_id=BOT_CFG.tg_chat_id, action="typing")
 
     def send_msg(self, msg: str, pv=False, markup=None):
-        """发送消息
+        """Send message
 
-        :param str msg: 消息文本内容
-        :param bool pv: 是否展现预览, 默认不展示
-        :param InlineKeyboardMarkup markup: 标记, 默认没有
+        :param str msg: Message text content
+        :param bool pv: Whether to show preview, default is False
+        :param InlineKeyboardMarkup markup: Markup, default is None
         """
         BOT.send_message(
             chat_id=BOT_CFG.tg_chat_id,
@@ -142,59 +142,59 @@ class BotUtils:
         )
 
     def send_msg_code_op(self, code: int, op: str):
-        """根据状态码和操作描述发送消息
+        """Send message based on status code and operation description
 
-        :param int code: 状态码
-        :param str op: 执行的操作描述
+        :param int code: Status code
+        :param str op: Operation description
         """
         if code == 200:
             self.send_msg(
-                f"""执行操作: {op}
-执行结果: 成功 ^_^"""
+                f"""Executing operation: {op}
+Execution result: Success ^_^"""
             )
         elif code == 404:
             self.send_msg(
-                f"""执行操作: {op}
-执行结果: 未查找到结果 Q_Q"""
+                f"""Executing operation: {op}
+Execution result: Not found Q_Q"""
             )
         elif code == 500:
             self.send_msg(
-                f"""执行操作: {op}
-执行结果: 服务器出错, 请重试或检查日志 Q_Q"""
+                f"""Executing operation: {op}
+Execution result: Server error, please retry or check the logs Q_Q"""
             )
         elif code == 502:
             self.send_msg(
-                f"""执行操作: {op}
-执行结果: 网络请求失败, 请重试或检查网络 Q_Q"""
+                f"""Executing operation: {op}
+Execution result: Network request failed, please retry or check the network Q_Q"""
             )
 
     def send_msg_success_op(self, op: str):
-        """根据操作描述发送执行成功的消息
+        """Send message for successful operation
 
-        :param str op: 执行的操作描述
+        :param str op: Operation description
         """
         self.send_msg(
-            f"""执行操作: {op}
-执行结果: 成功 ^_^"""
+            f"""Executing operation: {op}
+Execution result: Success ^_^"""
         )
 
     def send_msg_fail_reason_op(self, reason: str, op: str):
-        """根据失败原因和操作描述发送执行失败的消息
+        """Send message for failed operation with reason
 
-        :param str reason: 失败原因
-        :param str op: 执行的操作描述
+        :param str reason: Failure reason
+        :param str op: Operation description
         """
         self.send_msg(
-            f"""执行操作: {op}
-执行结果: 失败, {reason} Q_Q"""
+            f"""Executing operation: {op}
+Execution result: Failure, {reason} Q_Q"""
         )
 
     def check_success(self, code: int, op: str) -> bool:
-        """检查状态码, 确认请求是否成功
+        """Check status code to confirm if the request was successful
 
-        :param int code: 状态码
-        :param str op: 执行的操作描述
-        :return bool: 请求成功与否
+        :param int code: Status code
+        :param str op: Operation description
+        :return bool: Whether the request was successful or not
         """
         if code == 200:
             return True
@@ -207,11 +207,11 @@ class BotUtils:
         return False
 
     def create_btn_by_key(self, key_type: str, obj) -> InlineKeyboardButton:
-        """根据按钮种类创建按钮
+        """Create a button based on the button type
 
-        :param str key_type: 按钮种类
-        :param any obj: 数据对象
-        :return InlineKeyboardButton: 按钮对象
+        :param str key_type: Button type
+        :param any obj: Data object
+        :return InlineKeyboardButton: Button object
         """
         if key_type == BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID:
             return InlineKeyboardButton(
@@ -237,29 +237,29 @@ class BotUtils:
         extra_btns=[],
         page_btns=[],
     ):
-        """发送按钮消息
+        """Send button message
 
-        :param int max_btn_per_row: 每行最大按钮数量
-        :param int max_row_per_msg: 每条消息最多行数
-        :param str key_type: 按钮种类
-        :param str title: 消息标题
-        :param list objs: 数据对象数组
-        :param list extra_btns: 附加按钮列表, 二维数组, 对应于实际的按钮排布, 附加在每条消息尾部, 默认为空
-        :param list page_btns: 分页块
+        :param int max_btn_per_row: Maximum number of buttons per row
+        :param int max_row_per_msg: Maximum number of rows per message
+        :param str key_type: Button type
+        :param str title: Message title
+        :param list objs: Data object array
+        :param list extra_btns: Additional button list, 2-dimensional array, corresponds to the actual button arrangement, default is empty
+        :param list page_btns: Pagination block
         """
-        # 初始化数据
+        # Initialize data
         markup = InlineKeyboardMarkup()
         row_count = 0
         btns = []
-        # 开始生成按钮和发送消息
+        # Start generating buttons and sending messages
         for obj in objs:
             btns.append(self.create_btn_by_key(key_type, obj))
-            # 若一行按钮的数量达到 max_btn_per_row, 则加入行
+            # If the number of buttons in a row reaches max_btn_per_row, add the row
             if len(btns) == max_btn_per_row:
                 markup.row(*btns)
                 row_count += 1
                 btns = []
-            # 若消息中行数达到 max_row_per_msg, 则发送消息
+            # If the number of rows in the message reaches max_row_per_msg, send the message
             if row_count == max_row_per_msg:
                 for extra_btn in extra_btns:
                     markup.row(*extra_btn)
@@ -268,11 +268,11 @@ class BotUtils:
                 self.send_msg(msg=title, markup=markup)
                 row_count = 0
                 markup = InlineKeyboardMarkup()
-        # 若当前行按钮数量不为 0, 则加入行
+        # If the current row's button count is not 0, add the row
         if btns != []:
             markup.row(*btns)
             row_count += 1
-        # 若当前行数不为 0, 则发送消息
+        # If the current row count is not 0, send the message
         if row_count != 0:
             for extra_btn in extra_btns:
                 markup.row(*extra_btn)
@@ -283,31 +283,31 @@ class BotUtils:
     def get_page_elements(
         self, objs: list, page: int, col: int, row: int, key_type: str
     ) -> typing.Tuple[list, list, str]:
-        """获取当前页对象列表, 分页按钮列表, 数量标题
+        """Get the current page object list, pagination button list, and quantity title
 
-        :param list objs: 所有对象
-        :param int page: 当前页
-        :param int col: 当前页列数
-        :param int row: 当前页行数
-        :param str key_type: 按键类型
-        :return tuple[list, list, str]: 当前页对象列表, 分页按钮列表, 数量标题
+        :param list objs: All objects
+        :param int page: Current page
+        :param int col: Number of columns per page
+        :param int row: Number of rows per page
+        :param str key_type: Key type
+        :return tuple[list, list, str]: Current page object list, pagination button list, quantity title
         """
-        # 记录总数
+        # Record the total count
         record_count_total = len(objs)
-        # 每页记录数
+        # Records per page
         record_count_per_page = col * row
-        # 页数
+        # Number of pages
         if record_count_per_page > record_count_total:
             page_count = 1
         else:
             page_count = math.ceil(record_count_total / record_count_per_page)
-        # 如果要获取的页大于总页数, 那么获取的页设为最后一页
+        # If the requested page is greater than the total number of pages, set the requested page to the last page
         if page > page_count:
             page = page_count
-        # 获取当前页对象字典
+        # Get the current page object list
         start_idx = (page - 1) * record_count_per_page
         objs = objs[start_idx : start_idx + record_count_per_page]
-        # 获取按键列表
+        # Get the button list
         if page == 1:
             to_previous = 1
         else:
@@ -329,8 +329,8 @@ class BotUtils:
         btn_to_last = InlineKeyboardButton(
             text=">>", callback_data=f"{page_count}:{key_type}"
         )
-        # 获取数量标题
-        title = f"总数: <b>{record_count_total}</b>, 总页数: <b>{page_count}</b>"
+        # Get the quantity title
+        title = f"Total: <b>{record_count_total}</b>, Total pages: <b>{page_count}</b>"
         return (
             objs,
             [btn_to_first, btn_to_previous, btn_to_current, btn_to_next, btn_to_last],
