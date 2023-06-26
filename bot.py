@@ -43,28 +43,30 @@ PATH_CONFIG_FILE = f"config.yaml"
 # 正则匹配 AV
 AV_PAT = re.compile(r"[a-z0-9]+[-_](?:ppv-)?[a-z0-9]+")
 # 帮助消息
-MSG_HELP = f"""发送给机器人一条含有番号的消息, 机器人会匹配并搜索消息中所有符合番号规则(大部分)的番号, 若匹配不到可通过 <code>/av</code> 命令查找。
+MSG_HELP = f"""Hey, I am Powerful an AV Fan!
 
-/help  查看指令帮助
-/stars  查看收藏的演员
-/avs  查看收藏的番号
-/nice  随机获取一部高分 av
-/new  随机获取一部最新 av
-/rank  获取 DMM 女优排行榜
-/record  获取收藏记录文件
-<code>/star</code>  后接空格和演员名称可搜索该演员
-<code>/av</code>  后接空格和番号可搜索该番号
+/help - Need any help!
+/stars - View favorite actors.
+/avs - View favorite product codes.
+/nice - Get a random highly rated product.
+/new - Get a random latest product.
+/rank - Get the DMM actress ranking.
+/record - Get the favorite records file.
+/star [actor name]
+/av [product code]
+
+⚠️ ᴘᴏᴡᴇʀᴇᴅ ʙʏ Jᴀᴠ Bʟᴀsᴛᴇʀ
 """
 BOT_CMDS = {
-    "help": "查看指令帮助",
-    "stars": "查看收藏的演员",
-    "avs": "查看收藏的番号",
-    "nice": "随机获取一部高分 av",
-    "new": "随机获取一部最新 av",
-    "rank": "获取 DMM 女优排行榜",
-    "record": "获取收藏记录文件",
-    "star": "后接演员名称可搜索该演员",
-    "av": "后接番号可搜索该番号",
+    "help": "View command help",
+    "stars": "View favorite actors",
+    "avs": "View favorite AV codes",
+    "nice": "Get a random high-rated AV",
+    "new": "Get a random latest AV",
+    "rank": "Get DMM actress ranking",
+    "record": "Get favorite records file",
+    "star": "Followed by actor's name to search for the actor",
+    "av": "Followed by AV code to search for the AV",
 }
 
 
