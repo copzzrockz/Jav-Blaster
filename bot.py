@@ -594,18 +594,18 @@ Execution result: Failure, {reason} Q_Q"""
                 av_title = av_title_ch
             av_title = av_title.replace("<", "").replace(">", "")
             msg += f"""【Title】<a href="{av_url}">{av_title}</a>
-    """
+"""
         # ID
         msg += f"""【ID】<code>{av_id}</code>
-    """
+"""
         # Date
         if av_date != "":
             msg += f"""【Date】{av_date}
-    """
+"""
         # Score
         if av_score:
             msg += f"""【Score】{av_score}
-    """
+"""
         # Stars
         if av_stars != []:
             show_star_name = av_stars[0]["name"]
@@ -622,7 +622,7 @@ Execution result: Failure, {reason} Q_Q"""
                         # Exit if count is greater than 5
                         if i >= 5:
                             more_star_msg = f"""【Stars】<a href="{av_url}">View more......</a>
-    """
+"""
                             break
                         # Get search name
                         name = star["name"]
@@ -646,10 +646,10 @@ Execution result: Failure, {reason} Q_Q"""
                             name_zh = wiki_json["title"]
                             wiki_zh = wiki_json["url"]
                             stars_msg += f"""【Stars】<code>{name_zh}</code> | <a href="{wiki_zh}">Wiki</a> | <a href="{link}">Javbus</a>
-    """
+"""
                         else:
                             stars_msg += f"""【Stars】<code>{name}</code> | <a href="{wiki}">Wiki</a> | <a href="{link}">Javbus</a>
-    """
+"""
                 if more_star_msg != "":
                     stars_msg += more_star_msg
                 BOT_CACHE_DB.set_cache(
