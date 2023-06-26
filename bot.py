@@ -337,132 +337,134 @@ Execution result: Failure, {reason} Q_Q"""
             title,
         )
 
-    def get_stars_record(self, page=1):
-        """获取演员收藏记录
+   def get_stars_record(self, page=1):
+    """Get actor/actress collection records.
 
-        :param int page: 第几页, 默认第一页
-        """
-        # 初始化数据
-        record, is_star_exists, _ = BOT_DB.check_has_record()
-        if not record or not is_star_exists:
-            self.send_msg_fail_reason_op(reason="尚无演员收藏记录", op="获取演员收藏记录")
-            return
-        stars = record["stars"]
-        stars.reverse()
-        col, row = 4, 5
-        objs, page_btns, title = self.get_page_elements(
-            objs=stars,
-            page=page,
-            col=col,
-            row=row,
-            key_type=BotKey.KEY_GET_STARS_RECORD,
-        )
-        # 发送按钮消息
-        self.send_msg_btns(
-            max_btn_per_row=col,
-            max_row_per_msg=row,
-            key_type=BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID,
-            title="<b>收藏的演员: </b>" + title,
-            objs=objs,
-            page_btns=page_btns,
-        )
+    :param int page: Page number, default is the first page.
+    """
+    # Initialize data
+    record, is_star_exists, _ = BOT_DB.check_has_record()
+    if not record or not is_star_exists:
+        self.send_msg_fail_reason_op(reason="No actor/actress collection records found", op="Get actor/actress collection records")
+        return
+    stars = record["stars"]
+    stars.reverse()
+    col, row = 4, 5
+    objs, page_btns, title = self.get_page_elements(
+        objs=stars,
+        page=page,
+        col=col,
+        row=row,
+        key_type=BotKey.KEY_GET_STARS_RECORD,
+    )
+    # Send button message
+    self.send_msg_btns(
+        max_btn_per_row=col,
+        max_row_per_msg=row,
+        key_type=BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID,
+        title="<b>Favorite Actors/Actresses: </b>" + title,
+        objs=objs,
+        page_btns=page_btns,
+    )
 
-    def get_star_detail_record_by_name_id(self, star_name: str, star_id: str):
-        """根据演员名称和编号获取该演员更多信息
+def get_star_detail_record_by_name_id(self, star_name: str, star_id: str):
+    """Get more information about an actor/actress based on their name and ID.
 
-        :param str star_name: 演员名称
-        :param str star_id: 演员编号
-        """
-        # 初始化数据
-        record, is_stars_exists, is_avs_exists = BOT_DB.check_has_record()
-        if not record:
-            self.send_msg(reason="尚无该演员收藏记录", op=f"获取演员 <code>{star_name}</code> 的更多信息")
-            return
-        avs = []
-        star_avs = []
-        cur_star_exists = False
-        if is_avs_exists:
-            avs = record["avs"]
-            avs.reverse()
-            for av in avs:
-                # 如果演员编号在该 av 的演员编号列表中
-                if star_id in av["stars"]:
-                    star_avs.append(av["id"])
-        if is_stars_exists:
-            stars = record["stars"]
-            for star in stars:
-                if star["id"].lower() == star_id.lower():
-                    cur_star_exists = True
-        # 发送按钮消息
-        extra_btn1 = InlineKeyboardButton(
-            text=f"随机 av",
-            callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RANDOM_GET_AV_BY_STAR_ID}",
-        )
-        extra_btn2 = InlineKeyboardButton(
-            text=f"最新 av",
-            callback_data=f"{star_name}|{star_id}:{BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID}",
-        )
-        extra_btn3 = InlineKeyboardButton(
-            text=f"高分 av",
-            callback_data=f"{star_name}:{BotKey.KEY_GET_NICE_AVS_BY_STAR_NAME}",
-        )
-        if cur_star_exists:
-            extra_btn4 = InlineKeyboardButton(
-                text=f"取消收藏",
-                callback_data=f"{star_name}|{star_id}:{BotKey.KEY_UNDO_RECORD_STAR_BY_STAR_NAME_ID}",
-            )
-        else:
-            extra_btn4 = InlineKeyboardButton(
-                text=f"收藏演员",
-                callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID}",
-            )
-        title = f'<code>{star_name}</code> | <a href="{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{star_name}">Wiki</a> | <a href="{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_ID}/{star_id}">Javbus</a>'
-        if len(star_avs) == 0:  # 没有该演员对应 av 收藏记录
-            markup = InlineKeyboardMarkup()
-            markup.row(extra_btn1, extra_btn2, extra_btn3, extra_btn4)
-            self.send_msg(msg=title, markup=markup)
-            return
-        self.send_msg_btns(
-            max_btn_per_row=4,
-            max_row_per_msg=10,
-            key_type=BotKey.KEY_GET_AV_DETAIL_RECORD_BY_ID,
-            title=title,
-            objs=star_avs,
-            extra_btns=[[extra_btn1, extra_btn2, extra_btn3, extra_btn4]],
-        )
-
-    def get_avs_record(self, page=1):
-        """获取番号收藏记录
-
-        :param int page: 第几页, 默认第一页
-        """
-        # 初始化数据
-        record, _, is_avs_exists = BOT_DB.check_has_record()
-        if not record or not is_avs_exists:
-            self.send_msg_fail_reason_op(reason="尚无番号收藏记录", op="获取番号收藏记录")
-            return
-        avs = [av["id"] for av in record["avs"]]
+    :param str star_name: Actor/actress name
+    :param str star_id: Actor/actress ID
+    """
+    # Initialize data
+    record, is_stars_exists, is_avs_exists = BOT_DB.check_has_record()
+    if not record:
+        self.send_msg(reason="No collection records found for this actor/actress", op=f"Get more information about actor/actress <code>{star_name}</code>")
+        return
+    avs = []
+    star_avs = []
+    cur_star_exists = False
+    if is_avs_exists:
+        avs = record["avs"]
         avs.reverse()
-        # 发送按钮消息
-        extra_btn1 = InlineKeyboardButton(
-            text="随机高分 av", callback_data=f"0:{BotKey.KEY_RANDOM_GET_AV_NICE}"
+        for av in avs:
+            # If the actor/actress ID is in the list of actor/actress IDs for this AV
+            if star_id in av["stars"]:
+                star_avs.append(av["id"])
+    if is_stars_exists:
+        stars = record["stars"]
+        for star in stars:
+            if star["id"].lower() == star_id.lower():
+                cur_star_exists = True
+    # Send button message
+    extra_btn1 = InlineKeyboardButton(
+        text="Random AV",
+        callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RANDOM_GET_AV_BY_STAR_ID}",
+    )
+    extra_btn2 = InlineKeyboardButton(
+        text="Latest AV",
+        callback_data=f"{star_name}|{star_id}:{BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID}",
+    )
+    extra_btn3 = InlineKeyboardButton(
+        text="High-rated AV",
+        callback_data=f"{star_name}:{BotKey.KEY_GET_NICE_AVS_BY_STAR_NAME}",
+    )
+    if cur_star_exists:
+        extra_btn4 = InlineKeyboardButton(
+            text="Remove from collection",
+            callback_data=f"{star_name}|{star_id}:{BotKey.KEY_UNDO_RECORD_STAR_BY_STAR_NAME_ID}",
         )
-        extra_btn2 = InlineKeyboardButton(
-            text="随机最新 av", callback_data=f"0:{BotKey.KEY_RANDOM_GET_AV_NEW}"
+    else:
+        extra_btn4 = InlineKeyboardButton(
+            text="Add to collection",
+            callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID}",
         )
-        col, row = 4, 10
-        objs, page_btns, title = self.get_page_elements(
-            objs=avs, page=page, col=col, row=row, key_type=BotKey.KEY_GET_AVS_RECORD
-        )
-        self.send_msg_btns(
-            max_btn_per_row=col,
-            max_row_per_msg=row,
-            key_type=BotKey.KEY_GET_AV_DETAIL_RECORD_BY_ID,
-            title="<b>收藏的番号: </b>" + title,
-            objs=objs,
-            extra_btns=[[extra_btn1, extra_btn2]],
-            page_btns=page_btns,
-        )
+    title = f'<code>{star_name}</code> | <a href="{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{star_name}">Wiki</a> | <a href="{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_ID}/{star_id}">Javbus</a>'
+    if len(star_avs) == 0:  # No collection records found for this actor/actress
+        markup = InlineKeyboardMarkup()
+        markup.row(extra_btn1, extra_btn2, extra_btn3, extra_btn4)
+        self.send_msg(msg=title, markup=markup)
+        return
+    self.send_msg_btns(
+        max_btn_per_row=4,
+        max_row_per_msg=10,
+        key_type=BotKey.KEY_GET_AV_DETAIL_RECORD_BY_ID,
+        title=title,
+        objs=star_avs,
+        extra_btns=[[extra_btn1, extra_btn2, extra_btn3, extra_btn4]],
+    )
+
+def get_avs_record(self, page=1):
+    """Get AV (Adult Video) collection records.
+
+    :param int page: Page number, default is the first page.
+    """
+    # Initialize data
+    record, _, is_avs_exists = BOT_DB.check_has_record()
+    if not record or not is_avs_exists:
+        self.send_msg_fail_reason_op(reason="No AV collection records found", op="Get AV collection records")
+        return
+    avs = [av["id"] for av in record["avs"]]
+    avs.reverse()
+    # Send button message
+    extra_btn1 = InlineKeyboardButton(
+        text="Random high-rated AV",
+        callback_data=f"0:{BotKey.KEY_RANDOM_GET_AV_NICE}"
+    )
+    extra_btn2 = InlineKeyboardButton(
+        text="Random latest AV",
+        callback_data=f"0:{BotKey.KEY_RANDOM_GET_AV_NEW}"
+    )
+    col, row = 4, 10
+    objs, page_btns, title = self.get_page_elements(
+        objs=avs, page=page, col=col, row=row, key_type=BotKey.KEY_GET_AVS_RECORD
+    )
+    self.send_msg_btns(
+        max_btn_per_row=col,
+        max_row_per_msg=row,
+        key_type=BotKey.KEY_GET_AV_DETAIL_RECORD_BY_ID,
+        title="<b>Favorite AVs: </b>" + title,
+        objs=objs,
+        extra_btns=[[extra_btn1, extra_btn2]],
+        page_btns=page_btns,
+    )
 
     def get_av_detail_record_by_id(self, id: str):
         """根据番号获取该番号更多信息
