@@ -466,11 +466,10 @@ Execution result: Failure, {reason} Q_Q"""
             page_btns=page_btns,
         )
 
-
     def get_av_detail_record_by_id(self, id: str):
-        """根据番号获取该番号更多信息
-
-        :param str id: 番号
+        """Get more information about an AV (Adult Video) based on its ID.
+    
+        :param str id: AV ID
         """
         record, _, is_avs_exists = BOT_DB.check_has_record()
         avs = record["avs"]
@@ -480,20 +479,21 @@ Execution result: Failure, {reason} Q_Q"""
                 cur_av_exists = True
         markup = InlineKeyboardMarkup()
         btn = InlineKeyboardButton(
-            text=f"获取对应 av", callback_data=f"{id}:{BotKey.KEY_GET_AV_BY_ID}"
+            text="Get corresponding AV",
+            callback_data=f"{id}:{BotKey.KEY_GET_AV_BY_ID}",
         )
         if cur_av_exists:
             markup.row(
                 btn,
                 InlineKeyboardButton(
-                    text=f"取消收藏",
+                    text="Remove from collection",
                     callback_data=f"{id}:{BotKey.KEY_UNDO_RECORD_AV_BY_ID}",
                 ),
             )
         else:
             markup.row(btn)
         self.send_msg(msg=f"<code>{id}</code>", markup=markup)
-
+    
     def get_av_by_id(
         self,
         id: str,
@@ -503,18 +503,18 @@ Execution result: Failure, {reason} Q_Q"""
         magnet_max_count=3,
         not_send=False,
     ) -> dict:
-        """根据番号获取 av
-
-        :param str id: 番号
-        :param bool send_to_pikpak: 是否发给 pikpak, 默认不发送
-        :param bool is_nice: 是否过滤出高清, 有字幕磁链, 默认是
-        :param bool is_uncensored: 是否过滤出无码磁链, 默认是
-        :param int magnet_max_count: 过滤后磁链的最大数目, 默认为 3
-        :param not_send: 是否不发送 av 结果, 默认发送
-        :return dict: 当不发送 av 结果时, 返回得到的 av(如果有)
+        """Get AV (Adult Video) based on its ID.
+    
+        :param str id: AV ID
+        :param bool send_to_pikpak: Whether to send to pikpak, default is False
+        :param bool is_nice: Whether to filter for high-quality videos with subtitles, default is True
+        :param bool is_uncensored: Whether to filter for uncensored videos, default is True
+        :param int magnet_max_count: Maximum number of filtered magnets, default is 3
+        :param not_send: Whether to not send the AV result, default is False
+        :return dict: If not_send is True, return the obtained AV (if any)
         """
-        # 获取 av
-        op_get_av_by_id = f"搜索番号 <code>{id}</code>"
+        # Get AV
+        op_get_av_by_id = f"Search for AV with ID <code>{id}</code>"
         av = BOT_CACHE_DB.get_cache(key=id, type=BotCacheDb.TYPE_AV)
         av_score = None
         is_cache = False
@@ -524,7 +524,7 @@ Execution result: Failure, {reason} Q_Q"""
                 if not not_send:
                     futures[
                         executor.submit(DMM_UTIL.get_score_by_id, id)
-                    ] = 0  # 获取 av 评分
+                    ] = 0  # Get AV score
                 futures[
                     executor.submit(
                         JAVBUS_UTIL.get_av_by_id,
@@ -533,7 +533,7 @@ Execution result: Failure, {reason} Q_Q"""
                         is_uncensored,
                         magnet_max_count,
                     )
-                ] = 1  # 通过 javbus 获取 av
+                ] = 1  # Get AV from Javbus
                 futures[
                     executor.submit(
                         SUKEBEI_UTIL.get_av_by_id,
@@ -542,7 +542,7 @@ Execution result: Failure, {reason} Q_Q"""
                         is_uncensored,
                         magnet_max_count,
                     )
-                ] = 2  # 通过 sukebei 获取 av
+                ] = 2  # Get AV from Sukebei
                 for future in concurrent.futures.as_completed(futures):
                     future_type = futures[future]
                     if future_type == 0:
@@ -557,7 +557,7 @@ Execution result: Failure, {reason} Q_Q"""
                 else:
                     self.send_msg_code_op(404, op_get_av_by_id)
                 return
-            if code_javbus == 200:  # 优先选择 javbus
+            if code_javbus == 200:  # Prefer Javbus
                 av = av_javbus
             elif code_sukebei == 200:
                 av = av_sukebei
@@ -574,7 +574,7 @@ Execution result: Failure, {reason} Q_Q"""
             is_cache = True
         if not_send:
             return av
-        # 提取数据
+        # Extract data
         av_id = id
         av_title = av["title"]
         av_img = av["img"]
@@ -583,9 +583,9 @@ Execution result: Failure, {reason} Q_Q"""
         av_stars = av["stars"]
         av_magnets = av["magnets"]
         av_url = av["url"]
-        # 拼接消息
+        # Compose message
         msg = ""
-        # 标题
+        # Title
         if av_title != "":
             av_title_ch = TRANS_UTIL.trans(
                 text=av_title, from_lang="ja", to_lang="en"
@@ -593,20 +593,20 @@ Execution result: Failure, {reason} Q_Q"""
             if av_title_ch:
                 av_title = av_title_ch
             av_title = av_title.replace("<", "").replace(">", "")
-            msg += f"""【标题】<a href="{av_url}">{av_title}</a>
-"""
-        # 番号
-        msg += f"""【番号】<code>{av_id}</code>
-"""
-        # 日期
+            msg += f"""【Title】<a href="{av_url}">{av_title}</a>
+    """
+        # ID
+        msg += f"""【ID】<code>{av_id}</code>
+    """
+        # Date
         if av_date != "":
-            msg += f"""【日期】{av_date}
-"""
-        # 评分
+            msg += f"""【Date】{av_date}
+    """
+        # Score
         if av_score:
-            msg += f"""【评分】{av_score}
-"""
-        # 演员
+            msg += f"""【Score】{av_score}
+    """
+        # Stars
         if av_stars != []:
             show_star_name = av_stars[0]["name"]
             show_star_id = av_stars[0]["id"]
@@ -619,18 +619,18 @@ Execution result: Failure, {reason} Q_Q"""
                 more_star_msg = ""
                 with concurrent.futures.ThreadPoolExecutor() as executor:
                     for i, star in enumerate(av_stars):
-                        # 如果个数大于 5 则退出
+                        # Exit if count is greater than 5
                         if i >= 5:
-                            more_star_msg = f"""【演员】<a href="{av_url}">查看更多......</a>
-"""
+                            more_star_msg = f"""【Stars】<a href="{av_url}">View more......</a>
+    """
                             break
-                        # 获取搜索名
+                        # Get search name
                         name = star["name"]
-                        other_name_start = name.find("(")  # 删除别名
+                        other_name_start = name.find("(")  # Remove alias
                         if other_name_start != -1:
                             name = name[:other_name_start]
                             star["name"] = name
-                        # 从日文维基获取中文维基
+                        # Get Chinese Wiki from Japanese Wiki
                         futures[
                             executor.submit(
                                 WIKI_UTIL.get_wiki_page_by_lang, name, "ja", "zh"
@@ -645,21 +645,22 @@ Execution result: Failure, {reason} Q_Q"""
                         if wiki_json and wiki_json["lang"] == "zh":
                             name_zh = wiki_json["title"]
                             wiki_zh = wiki_json["url"]
-                            stars_msg += f"""【演员】<code>{name_zh}</code> | <a href="{wiki_zh}">Wiki</a> | <a href="{link}">Javbus</a>
-"""
+                            stars_msg += f"""【Stars】<code>{name_zh}</code> | <a href="{wiki_zh}">Wiki</a> | <a href="{link}">Javbus</a>
+    """
                         else:
-                            stars_msg += f"""【演员】<code>{name}</code> | <a href="{wiki}">Wiki</a> | <a href="{link}">Javbus</a>
-"""
+                            stars_msg += f"""【Stars】<code>{name}</code> | <a href="{wiki}">Wiki</a> | <a href="{link}">Javbus</a>
+    """
                 if more_star_msg != "":
                     stars_msg += more_star_msg
                 BOT_CACHE_DB.set_cache(
                     key=av_id, value=stars_msg, type=BotCacheDb.TYPE_STARS_MSG
                 )
             msg += stars_msg
-        # 标签
+        # Tags
         if av_tags != "":
             av_tags = av_tags.replace("<", "").replace(">", "")
-            msg += f"""【标签】{av_tags}
+            msg += f"""【Tags】{av_tags}
+
 """
         # 其它
         msg += f"""【其它】<a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>
