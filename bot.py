@@ -91,7 +91,7 @@ AVGLE_UTIL = jvav.AvgleUtil(BOT_CFG.proxy_addr)
 
 
 class BotKey:
-    """回调按键值"""
+    """callback key value."""
 
     KEY_GET_SAMPLE_BY_ID = "k0_0"
     KEY_GET_MORE_MAGNETS_BY_ID = "k0_1"
