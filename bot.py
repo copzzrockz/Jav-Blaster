@@ -338,35 +338,35 @@ Execution result: Failure, {reason} Q_Q"""
         )
 
     def get_stars_record(self, page=1):
-    """Get actor/actress collection records.
-
-    :param int page: Page number, default is the first page.
-    """
-    # Initialize data
-    record, is_star_exists, _ = BOT_DB.check_has_record()
-    if not record or not is_star_exists:
-        self.send_msg_fail_reason_op(reason="No actor/actress collection records found", op="Get actor/actress collection records")
-        return
-    stars = record["stars"]
-    stars.reverse()
-    col, row = 4, 5
-    objs, page_btns, title = self.get_page_elements(
-        objs=stars,
-        page=page,
-        col=col,
-        row=row,
-        key_type=BotKey.KEY_GET_STARS_RECORD,
-    )
-    # Send button message
-    self.send_msg_btns(
-        max_btn_per_row=col,
-        max_row_per_msg=row,
-        key_type=BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID,
-        title="<b>Favorite Actors/Actresses: </b>" + title,
-        objs=objs,
-        page_btns=page_btns,
-    )
-
+        """Get actor/actress collection records.
+    
+        :param int page: Page number, default is the first page.
+        """
+        # Initialize data
+        record, is_star_exists, _ = BOT_DB.check_has_record()
+        if not record or not is_star_exists:
+            self.send_msg_fail_reason_op(reason="No actor/actress collection records found", op="Get actor/actress collection records")
+            return
+        stars = record["stars"]
+        stars.reverse()
+        col, row = 4, 5
+        objs, page_btns, title = self.get_page_elements(
+            objs=stars,
+            page=page,
+            col=col,
+            row=row,
+            key_type=BotKey.KEY_GET_STARS_RECORD,
+        )
+        # Send button message
+        self.send_msg_btns(
+            max_btn_per_row=col,
+            max_row_per_msg=row,
+            key_type=BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID,
+            title="<b>Favorite Actors/Actresses: </b>" + title,
+            objs=objs,
+            page_btns=page_btns,
+        )
+    
     def get_star_detail_record_by_name_id(self, star_name: str, star_id: str):
         """Get more information about an actor/actress based on their name and ID.
     
@@ -465,7 +465,6 @@ Execution result: Failure, {reason} Q_Q"""
             extra_btns=[[extra_btn1, extra_btn2]],
             page_btns=page_btns,
         )
-
 
 
     def get_av_detail_record_by_id(self, id: str):
