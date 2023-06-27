@@ -891,8 +891,7 @@ Execution result: Failure, {reason} Q_Q"""
                 BOT_CACHE_DB.set_cache(key=id, value=video, type=BotCacheDb.TYPE_FV)
             self.send_msg(
                 f"MissAv video: {BASE_URL_MISS_AV}/{id}"
-
-Avgle Video URL: {video}
+Avgle 视频地址: {video}
 """
             )
 
