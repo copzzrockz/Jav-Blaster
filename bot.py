@@ -1066,167 +1066,165 @@ Avgle Video URL: {video}
             self.send_msg(msg=title, markup=markup)
 
     def get_star_ja_name_by_zh_name(self, star_name: str) -> str:
-            """根据中文名字获取日文名字
-    
-            :param str star_name: 中文名字
-            :return str: 日文名字 (如果查找到)
-            """
-            if langdetect.detect(star_name) == "ja":
-                return star_name
-            star_ja_name = BOT_CACHE_DB.get_cache(
-                key=star_name, type=BotCacheDb.TYPE_STAR_JA_NAME
-            )
-            if star_ja_name:
-                return star_ja_name
-            wiki_json = WIKI_UTIL.get_wiki_page_by_lang(
-                topic=star_name, from_lang="zh", to_lang="ja"
-            )
-            if wiki_json and wiki_json["lang"] == "ja":
-                BOT_CACHE_DB.set_cache(
-                    key=star_name,
-                    value=wiki_json["title"],
-                    type=BotCacheDb.TYPE_STAR_JA_NAME,
-                )
-                return wiki_json["title"]
-            return star_name
-    
-    
-    def handle_callback(call):
-        """处理回调
-    
-        :param _type_ call
+        """根据中文名字获取日文名字
+
+        :param str star_name: 中文名字
+        :return str: 日文名字 (如果查找到)
         """
-        # 回显 typing...
-        bot_utils = BotUtils()
-        bot_utils.send_action_typing()
-        LOG.info(f"处理回调: {call.data}")
-        # 提取回调内容
-        s = call.data.rfind(":")
-        content = call.data[:s]
-        key_type = call.data[s + 1 :]
-        # 检查按键类型并处理
-        if key_type == BotKey.KEY_WATCH_PV_BY_ID:
-            bot_utils.watch_av_by_id(id=content, type=0)
-        elif key_type == BotKey.KEY_WATCH_FV_BY_ID:
-            bot_utils.watch_av_by_id(id=content, type=1)
-        elif key_type == BotKey.KEY_GET_SAMPLE_BY_ID:
-            bot_utils.get_sample_by_id(id=content)
-        elif key_type == BotKey.KEY_GET_MORE_MAGNETS_BY_ID:
-            bot_utils.get_more_magnets_by_id(id=content)
-        elif key_type == BotKey.KEY_RANDOM_GET_AV_BY_STAR_ID:
-            tmp = content.split("|")
-            star_name = tmp[0]
-            star_id = tmp[1]
-            code, id = JAVBUS_UTIL.get_id_by_star_id(star_id=star_id)
-            if bot_utils.check_success(code, f"随机获取演员 <code>{star_name}</code> 的 av"):
-                bot_utils.get_av_by_id(id=id)
-        elif key_type == BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID:
-            tmp = content.split("|")
-            star_name = tmp[0]
-            star_id = tmp[1]
-            bot_utils.get_star_new_avs_by_name_id(star_name=star_name, star_id=star_id)
-        elif key_type == BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID:
-            s = content.find("|")
-            star_name = content[:s]
-            star_id = content[s + 1 :]
-            if BOT_DB.record_star_by_name_id(star_name=star_name, star_id=star_id):
-                bot_utils.get_star_detail_record_by_name_id(
-                    star_name=star_name, star_id=star_id
-                )
-            else:
-                bot_utils.send_msg_code_op(500, f"收藏演员 <code>{star_name}</code>")
-        elif key_type == BotKey.KEY_RECORD_AV_BY_ID_STAR_IDS:
-            res = content.split("|")
-            id = res[0]
-            stars = []
-            if res[1] != "":
-                stars = [s for s in res[1:]]
-            if BOT_DB.record_id_by_id_stars(id=id, stars=stars):
-                bot_utils.get_av_detail_record_by_id(id=id)
-            else:
-                bot_utils.send_msg_code_op(500, f"收藏番号 <code>{id}</code>")
-        elif key_type == BotKey.KEY_GET_STARS_RECORD:
-            bot_utils.get_stars_record(page=int(content))
-        elif key_type == BotKey.KEY_GET_AVS_RECORD:
-            bot_utils.get_avs_record(page=int(content))
-        elif key_type == BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID:
-            s = content.find("|")
+        if langdetect.detect(star_name) == "ja":
+            return star_name
+        star_ja_name = BOT_CACHE_DB.get_cache(
+            key=star_name, type=BotCacheDb.TYPE_STAR_JA_NAME
+        )
+        if star_ja_name:
+            return star_ja_name
+        wiki_json = WIKI_UTIL.get_wiki_page_by_lang(
+            topic=star_name, from_lang="zh", to_lang="ja"
+        )
+        if wiki_json and wiki_json["lang"] == "ja":
+            BOT_CACHE_DB.set_cache(
+                key=star_name,
+                value=wiki_json["title"],
+                type=BotCacheDb.TYPE_STAR_JA_NAME,
+            )
+            return wiki_json["title"]
+        return star_name
+
+
+def handle_callback(call):
+    """处理回调
+
+    :param _type_ call
+    """
+    # 回显 typing...
+    bot_utils = BotUtils()
+    bot_utils.send_action_typing()
+    LOG.info(f"处理回调: {call.data}")
+    # 提取回调内容
+    s = call.data.rfind(":")
+    content = call.data[:s]
+    key_type = call.data[s + 1 :]
+    # 检查按键类型并处理
+    if key_type == BotKey.KEY_WATCH_PV_BY_ID:
+        bot_utils.watch_av_by_id(id=content, type=0)
+    elif key_type == BotKey.KEY_WATCH_FV_BY_ID:
+        bot_utils.watch_av_by_id(id=content, type=1)
+    elif key_type == BotKey.KEY_GET_SAMPLE_BY_ID:
+        bot_utils.get_sample_by_id(id=content)
+    elif key_type == BotKey.KEY_GET_MORE_MAGNETS_BY_ID:
+        bot_utils.get_more_magnets_by_id(id=content)
+    elif key_type == BotKey.KEY_RANDOM_GET_AV_BY_STAR_ID:
+        tmp = content.split("|")
+        star_name = tmp[0]
+        star_id = tmp[1]
+        code, id = JAVBUS_UTIL.get_id_by_star_id(star_id=star_id)
+        if bot_utils.check_success(code, f"随机获取演员 <code>{star_name}</code> 的 av"):
+            bot_utils.get_av_by_id(id=id)
+    elif key_type == BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID:
+        tmp = content.split("|")
+        star_name = tmp[0]
+        star_id = tmp[1]
+        bot_utils.get_star_new_avs_by_name_id(star_name=star_name, star_id=star_id)
+    elif key_type == BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID:
+        s = content.find("|")
+        star_name = content[:s]
+        star_id = content[s + 1 :]
+        if BOT_DB.record_star_by_name_id(star_name=star_name, star_id=star_id):
             bot_utils.get_star_detail_record_by_name_id(
-                star_name=content[:s], star_id=content[s + 1 :]
+                star_name=star_name, star_id=star_id
             )
-        elif key_type == BotKey.KEY_GET_AV_DETAIL_RECORD_BY_ID:
-            bot_utils.get_av_detail_record_by_id(id=content)
-        elif key_type == BotKey.KEY_GET_AV_BY_ID:
-            bot_utils.get_av_by_id(id=content)
-        elif key_type == BotKey.KEY_RANDOM_GET_AV_NICE:
-            code, id = JAVLIB_UTIL.get_random_id_from_rank(0)
-            if bot_utils.check_success(code, "随机获取高分 av"):
-                bot_utils.get_av_by_id(id=id)
-        elif key_type == BotKey.KEY_RANDOM_GET_AV_NEW:
-            code, id = JAVLIB_UTIL.get_random_id_from_rank(1)
-            if bot_utils.check_success(code, "随机获取最新 av"):
-                bot_utils.get_av_by_id(id=id)
-        elif key_type == BotKey.KEY_UNDO_RECORD_AV_BY_ID:
-            op_undo_record_av = f"取消收藏番号 <code>{content}</code>"
-            if BOT_DB.undo_record_id(id=content):
-                bot_utils.send_msg_success_op(op_undo_record_av)
-            else:
-                bot_utils.send_msg_fail_reason_op(reason="文件解析出错", op=op_undo_record_av)
-        elif key_type == BotKey.KEY_UNDO_RECORD_STAR_BY_STAR_NAME_ID:
-            s = content.find("|")
-            op_undo_record_star = f"取消收藏演员 <code>{content[:s]}</code>"
-            if BOT_DB.undo_record_star_by_id(star_id=content[s + 1 :]):
-                bot_utils.send_msg_success_op(op_undo_record_star)
-            else:
-                bot_utils.send_msg_fail_reason_op(reason="文件解析出错", op=op_undo_record_star)
-        elif key_type == BotKey.KEY_SEARCH_STAR_BY_NAME:
-            star_name = content
-            star_name_alias = ""
-            idx_alias = star_name.find("（")
-            if idx_alias != -1:
-                star_name_alias = star_name[idx_alias + 1 : -1]
-                star_name = star_name[:idx_alias]
-            if not bot_utils.search_star_by_name(star_name) and star_name_alias != "":
-                bot_utils.send_msg(f"尝试搜索演员{star_name}的别名{star_name_alias}......")
-                bot_utils.search_star_by_name(star_name_alias)
-        elif key_type == BotKey.KEY_GET_TOP_STARS:
-            bot_utils.get_top_stars(page=int(content))
-        elif key_type == BotKey.KEY_GET_NICE_AVS_BY_STAR_NAME:
-            star_name_ori = content
-            avs = BOT_CACHE_DB.get_cache(
-                key=star_name_ori, type=BotCacheDb.TYPE_NICE_AVS_OF_STAR
-            )
-            if not avs:
-                star_name_ja = bot_utils.get_star_ja_name_by_zh_name(star_name_ori)
-                code, avs = DMM_UTIL.get_nice_avs_by_star_name(star_name=star_name_ja)
-                if bot_utils.check_success(code, f"获取演员 {star_name_ori} 的高分 av"):
-                    avs = avs[:60]
+        else:
+            bot_utils.send_msg_code_op(500, f"收藏演员 <code>{star_name}</code>")
+    elif key_type == BotKey.KEY_RECORD_AV_BY_ID_STAR_IDS:
+        res = content.split("|")
+        id = res[0]
+        stars = []
+        if res[1] != "":
+            stars = [s for s in res[1:]]
+        if BOT_DB.record_id_by_id_stars(id=id, stars=stars):
+            bot_utils.get_av_detail_record_by_id(id=id)
+        else:
+            bot_utils.send_msg_code_op(500, f"收藏番号 <code>{id}</code>")
+    elif key_type == BotKey.KEY_GET_STARS_RECORD:
+        bot_utils.get_stars_record(page=int(content))
+    elif key_type == BotKey.KEY_GET_AVS_RECORD:
+        bot_utils.get_avs_record(page=int(content))
+    elif key_type == BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID:
+        s = content.find("|")
+        bot_utils.get_star_detail_record_by_name_id(
+            star_name=content[:s], star_id=content[s + 1 :]
+        )
+    elif key_type == BotKey.KEY_GET_AV_DETAIL_RECORD_BY_ID:
+        bot_utils.get_av_detail_record_by_id(id=content)
+    elif key_type == BotKey.KEY_GET_AV_BY_ID:
+        bot_utils.get_av_by_id(id=content)
+    elif key_type == BotKey.KEY_RANDOM_GET_AV_NICE:
+        code, id = JAVLIB_UTIL.get_random_id_from_rank(0)
+        if bot_utils.check_success(code, "随机获取高分 av"):
+            bot_utils.get_av_by_id(id=id)
+    elif key_type == BotKey.KEY_RANDOM_GET_AV_NEW:
+        code, id = JAVLIB_UTIL.get_random_id_from_rank(1)
+        if bot_utils.check_success(code, "随机获取最新 av"):
+            bot_utils.get_av_by_id(id=id)
+    elif key_type == BotKey.KEY_UNDO_RECORD_AV_BY_ID:
+        op_undo_record_av = f"取消收藏番号 <code>{content}</code>"
+        if BOT_DB.undo_record_id(id=content):
+            bot_utils.send_msg_success_op(op_undo_record_av)
+        else:
+            bot_utils.send_msg_fail_reason_op(reason="文件解析出错", op=op_undo_record_av)
+    elif key_type == BotKey.KEY_UNDO_RECORD_STAR_BY_STAR_NAME_ID:
+        s = content.find("|")
+        op_undo_record_star = f"取消收藏演员 <code>{content[:s]}</code>"
+        if BOT_DB.undo_record_star_by_id(star_id=content[s + 1 :]):
+            bot_utils.send_msg_success_op(op_undo_record_star)
+        else:
+            bot_utils.send_msg_fail_reason_op(reason="文件解析出错", op=op_undo_record_star)
+    elif key_type == BotKey.KEY_SEARCH_STAR_BY_NAME:
+        star_name = content
+        star_name_alias = ""
+        idx_alias = star_name.find("（")
+        if idx_alias != -1:
+            star_name_alias = star_name[idx_alias + 1 : -1]
+            star_name = star_name[:idx_alias]
+        if not bot_utils.search_star_by_name(star_name) and star_name_alias != "":
+            bot_utils.send_msg(f"尝试搜索演员{star_name}的别名{star_name_alias}......")
+            bot_utils.search_star_by_name(star_name_alias)
+    elif key_type == BotKey.KEY_GET_TOP_STARS:
+        bot_utils.get_top_stars(page=int(content))
+    elif key_type == BotKey.KEY_GET_NICE_AVS_BY_STAR_NAME:
+        star_name_ori = content
+        avs = BOT_CACHE_DB.get_cache(
+            key=star_name_ori, type=BotCacheDb.TYPE_NICE_AVS_OF_STAR
+        )
+        if not avs:
+            star_name_ja = bot_utils.get_star_ja_name_by_zh_name(star_name_ori)
+            code, avs = DMM_UTIL.get_nice_avs_by_star_name(star_name=star_name_ja)
+            if bot_utils.check_success(code, f"获取演员 {star_name_ori} 的高分 av"):
+                avs = avs[:60]
+                BOT_CACHE_DB.set_cache(
+                    key=star_name_ori,
+                    value=avs,
+                    type=BotCacheDb.TYPE_NICE_AVS_OF_STAR,
+                )
+                if star_name_ja != star_name_ori:
                     BOT_CACHE_DB.set_cache(
-                        key=star_name_ori,
+                        key=star_name_ja,
                         value=avs,
                         type=BotCacheDb.TYPE_NICE_AVS_OF_STAR,
                     )
-                    if star_name_ja != star_name_ori:
-                        BOT_CACHE_DB.set_cache(
-                            key=star_name_ja,
-                            value=avs,
-                            type=BotCacheDb.TYPE_NICE_AVS_OF_STAR,
-                        )
-                else:
-                    return
-            bot_utils.send_msg_btns(
-                max_btn_per_row=3,
-                max_row_per_msg=20,
-                key_type=BotKey.KEY_GET_AV_BY_ID,
-                title=f"<b>演员 {star_name_ori} 的高分 av</b>",
-                objs=avs,
-            )
-        elif key_type == BotKey.KEY_DEL_AV_CACHE:
-            BOT_CACHE_DB.remove_cache(key=content, type=BotCacheDb.TYPE_AV)
-            BOT_CACHE_DB.remove_cache(key=content, type=BotCacheDb.TYPE_STARS_MSG)
-            bot_utils.get_av_by_id(id=content)
-
-
+            else:
+                return
+        bot_utils.send_msg_btns(
+            max_btn_per_row=3,
+            max_row_per_msg=20,
+            key_type=BotKey.KEY_GET_AV_BY_ID,
+            title=f"<b>演员 {star_name_ori} 的高分 av</b>",
+            objs=avs,
+        )
+    elif key_type == BotKey.KEY_DEL_AV_CACHE:
+        BOT_CACHE_DB.remove_cache(key=content, type=BotCacheDb.TYPE_AV)
+        BOT_CACHE_DB.remove_cache(key=content, type=BotCacheDb.TYPE_STARS_MSG)
+        bot_utils.get_av_by_id(id=content)
 
 def handle_message(message):
     """处理消息
