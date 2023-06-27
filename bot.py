@@ -892,16 +892,16 @@ Execution result: Failure, {reason} Q_Q"""
             self.send_msg(
                 f"MissAv video: {BASE_URL_MISS_AV}/{id}"
 
-Avgle 视频地址: {video}
+Avgle Video URL: {video}
 """
             )
 
     def search_star_by_name(self, star_name: str) -> bool:
-        """根据演员名称搜索演员
-
-        :param str star_name: 演员名称
+        """Search for a star by name
+    
+        :param str star_name: Star name
         """
-        op_search_star = f"搜索演员 <code>{star_name}</code>"
+        op_search_star = f"Search for star <code>{star_name}</code>"
         star = BOT_CACHE_DB.get_cache(key=star_name, type=BotCacheDb.TYPE_STAR)
         if not star:
             star_name_origin = star_name
@@ -924,19 +924,19 @@ Avgle 视频地址: {video}
         markup = InlineKeyboardMarkup()
         markup.row(
             InlineKeyboardButton(
-                text="随机 av",
+                text="Random AV",
                 callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RANDOM_GET_AV_BY_STAR_ID}",
             ),
             InlineKeyboardButton(
-                text="最新 av",
+                text="Latest AV",
                 callback_data=f"{star_name}|{star_id}:{BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID}",
             ),
             InlineKeyboardButton(
-                text=f"高分 av",
+                text="High-rated AV",
                 callback_data=f"{star_name}:{BotKey.KEY_GET_NICE_AVS_BY_STAR_NAME}",
             ),
             InlineKeyboardButton(
-                text=f"收藏 {star_name}",
+                text=f"Record {star_name}",
                 callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID}",
             ),
         )
@@ -948,15 +948,15 @@ Avgle 视频地址: {video}
             markup=markup,
         )
         return True
-
+    
     def get_top_stars(self, page=1):
-        """根据页数获取 DMM 女优排行榜, 每页 20 位女优
-
-        :param int page: 第几页, 默认第一页
+        """Get top stars from DMM, 20 stars per page
+    
+        :param int page: Page number, default is 1
         """
-        op_get_top_stars = f"获取 DMM 女优排行榜"
+        op_get_top_stars = f"Get top stars from DMM"
         stars = BOT_CACHE_DB.get_cache(key=page, type=BotCacheDb.TYPE_RANK)
-
+    
         if not stars:
             code, stars = DMM_UTIL.get_top_stars(page)
             if not self.check_success(code, op_get_top_stars):
@@ -972,18 +972,18 @@ Avgle 视频地址: {video}
             max_btn_per_row=col,
             max_row_per_msg=row,
             key_type=BotKey.KEY_SEARCH_STAR_BY_NAME,
-            title="<b>DMM 女优排行榜: </b>" + title,
+            title="<b>DMM Top Stars: </b>" + title,
             objs=objs,
             page_btns=page_btns,
         )
-
+    
     def send_msg_to_pikpak(self, msg):
-        """发送消息到Pikpak机器人
-
-        :param _type_ msg: 消息
-        :return any: 如果失败则为 None
+        """Send a message to Pikpak bot
+    
+        :param _type_ msg: Message
+        :return any: Returns None if failed
         """
-
+    
         async def send():
             try:
                 async with Client(
@@ -994,15 +994,15 @@ Avgle 视频地址: {video}
                 ) as app:
                     return await app.send_message(PIKPAK_BOT_NAME, msg)
             except Exception as e:
-                LOG.error(f"无法将消息发送到 pikpak: {e}")
+                LOG.error(f"Failed to send message to pikpak: {e}")
                 return None
-
+    
         return asyncio.run(send())
-
+    
     def get_more_magnets_by_id(self, id: str):
-        """根据番号获取更多磁链
-
-        :param id: 番号
+        """Get more magnets by ID
+    
+        :param id: ID
         """
         magnets = BOT_CACHE_DB.get_cache(key=id, type=BotCacheDb.TYPE_MAGNET)
         if not magnets:
@@ -1017,16 +1017,16 @@ Avgle 视频地址: {video}
         for magnet in magnets:
             magnet_tags = ""
             if magnet["uc"] == "1":
-                magnet_tags += "无码"
+                magnet_tags += "Uncensored"
             if magnet["hd"] == "1":
-                magnet_tags += "高清"
+                magnet_tags += "HD"
             if magnet["zm"] == "1":
-                magnet_tags += "含字幕"
+                magnet_tags += "Subtitles"
             star_tag = ""
             if magnet["hd"] == "1" and magnet["zm"] == "1":
                 star_tag = "*"
-            msg_tmp = f"""【{star_tag}{magnet_tags}磁链 {magnet["size"]}】<code>{magnet["link"]}</code>
-"""
+            msg_tmp = f"""【{star_tag}{magnet_tags} Magnet {magnet["size"]}】<code>{magnet["link"]}</code>
+    """
             if len(msg + msg_tmp) >= 4000:
                 self.send_msg(msg)
                 msg = msg_tmp
@@ -1034,14 +1034,14 @@ Avgle 视频地址: {video}
                 msg += msg_tmp
         if msg != "":
             self.send_msg(msg)
-
+    
     def get_star_new_avs_by_name_id(self, star_name: str, star_id: str):
-        """获取演员最新 av
-
-        :param str star_name: 演员名称
-        :param str star_id: 演员 id
+        """Get a star's latest AVs
+    
+        :param str star_name: Star name
+        :param str star_id: Star ID
         """
-        op_get_star_new_avs = f"获取 <code>{star_name}</code> 最新 av"
+        op_get_star_new_avs = f"Get latest AVs for <code>{star_name}</code>"
         ids = BOT_CACHE_DB.get_cache(key=star_id, type=BotCacheDb.TYPE_NEW_AVS_OF_STAR)
         if not ids:
             code, ids = JAVBUS_UTIL.get_new_ids_by_star_id(star_id=star_id)
@@ -1050,7 +1050,7 @@ Avgle 视频地址: {video}
             BOT_CACHE_DB.set_cache(
                 key=star_id, value=ids, type=BotCacheDb.TYPE_NEW_AVS_OF_STAR
             )
-        title = f"<code>{star_name}</code> 最新 av"
+        title = f"<code>{star_name}</code> Latest AVs"
         btns = [
             InlineKeyboardButton(
                 text=id, callback_data=f"{id}:{BotKey.KEY_GET_AV_BY_ID}"
