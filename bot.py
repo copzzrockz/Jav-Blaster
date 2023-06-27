@@ -1066,45 +1066,45 @@ Avgle Video URL: {video}
             self.send_msg(msg=title, markup=markup)
 
     def get_star_ja_name_by_zh_name(self, star_name: str) -> str:
-        """Get the Japanese name based on the Chinese name.
+            """根据中文名字获取日文名字
     
-        :param str star_name: Chinese name
-        :return str: Japanese name (if found)
-        """
-        if langdetect.detect(star_name) == "ja":
-            return star_name
-        star_ja_name = BOT_CACHE_DB.get_cache(
-            key=star_name, type=BotCacheDb.TYPE_STAR_JA_NAME
-        )
-        if star_ja_name:
-            return star_ja_name
-        wiki_json = WIKI_UTIL.get_wiki_page_by_lang(
-            topic=star_name, from_lang="zh", to_lang="ja"
-        )
-        if wiki_json and wiki_json["lang"] == "ja":
-            BOT_CACHE_DB.set_cache(
-                key=star_name,
-                value=wiki_json["title"],
-                type=BotCacheDb.TYPE_STAR_JA_NAME,
+            :param str star_name: 中文名字
+            :return str: 日文名字 (如果查找到)
+            """
+            if langdetect.detect(star_name) == "ja":
+                return star_name
+            star_ja_name = BOT_CACHE_DB.get_cache(
+                key=star_name, type=BotCacheDb.TYPE_STAR_JA_NAME
             )
-            return wiki_json["title"]
-        return star_name
+            if star_ja_name:
+                return star_ja_name
+            wiki_json = WIKI_UTIL.get_wiki_page_by_lang(
+                topic=star_name, from_lang="zh", to_lang="ja"
+            )
+            if wiki_json and wiki_json["lang"] == "ja":
+                BOT_CACHE_DB.set_cache(
+                    key=star_name,
+                    value=wiki_json["title"],
+                    type=BotCacheDb.TYPE_STAR_JA_NAME,
+                )
+                return wiki_json["title"]
+            return star_name
     
     
     def handle_callback(call):
-        """Handle callback.
+        """处理回调
     
         :param _type_ call
         """
-        # Show typing...
+        # 回显 typing...
         bot_utils = BotUtils()
         bot_utils.send_action_typing()
-        LOG.info(f"Handling callback: {call.data}")
-        # Extract callback content
+        LOG.info(f"处理回调: {call.data}")
+        # 提取回调内容
         s = call.data.rfind(":")
         content = call.data[:s]
         key_type = call.data[s + 1 :]
-        # Check key type and process
+        # 检查按键类型并处理
         if key_type == BotKey.KEY_WATCH_PV_BY_ID:
             bot_utils.watch_av_by_id(id=content, type=0)
         elif key_type == BotKey.KEY_WATCH_FV_BY_ID:
@@ -1118,7 +1118,7 @@ Avgle Video URL: {video}
             star_name = tmp[0]
             star_id = tmp[1]
             code, id = JAVBUS_UTIL.get_id_by_star_id(star_id=star_id)
-            if bot_utils.check_success(code, f"Get random actor <code>{star_name}</code> av"):
+            if bot_utils.check_success(code, f"随机获取演员 <code>{star_name}</code> 的 av"):
                 bot_utils.get_av_by_id(id=id)
         elif key_type == BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID:
             tmp = content.split("|")
@@ -1134,7 +1134,7 @@ Avgle Video URL: {video}
                     star_name=star_name, star_id=star_id
                 )
             else:
-                bot_utils.send_msg_code_op(500, f"Favorite actor <code>{star_name}</code>")
+                bot_utils.send_msg_code_op(500, f"收藏演员 <code>{star_name}</code>")
         elif key_type == BotKey.KEY_RECORD_AV_BY_ID_STAR_IDS:
             res = content.split("|")
             id = res[0]
@@ -1144,7 +1144,7 @@ Avgle Video URL: {video}
             if BOT_DB.record_id_by_id_stars(id=id, stars=stars):
                 bot_utils.get_av_detail_record_by_id(id=id)
             else:
-                bot_utils.send_msg_code_op(500, f"Favorite code <code>{id}</code>")
+                bot_utils.send_msg_code_op(500, f"收藏番号 <code>{id}</code>")
         elif key_type == BotKey.KEY_GET_STARS_RECORD:
             bot_utils.get_stars_record(page=int(content))
         elif key_type == BotKey.KEY_GET_AVS_RECORD:
@@ -1160,25 +1160,25 @@ Avgle Video URL: {video}
             bot_utils.get_av_by_id(id=content)
         elif key_type == BotKey.KEY_RANDOM_GET_AV_NICE:
             code, id = JAVLIB_UTIL.get_random_id_from_rank(0)
-            if bot_utils.check_success(code, "Get high-rated av randomly"):
+            if bot_utils.check_success(code, "随机获取高分 av"):
                 bot_utils.get_av_by_id(id=id)
         elif key_type == BotKey.KEY_RANDOM_GET_AV_NEW:
             code, id = JAVLIB_UTIL.get_random_id_from_rank(1)
-            if bot_utils.check_success(code, "Get latest av randomly"):
+            if bot_utils.check_success(code, "随机获取最新 av"):
                 bot_utils.get_av_by_id(id=id)
         elif key_type == BotKey.KEY_UNDO_RECORD_AV_BY_ID:
-            op_undo_record_av = f"Unfavorite code <code>{content}</code>"
+            op_undo_record_av = f"取消收藏番号 <code>{content}</code>"
             if BOT_DB.undo_record_id(id=content):
                 bot_utils.send_msg_success_op(op_undo_record_av)
             else:
-                bot_utils.send_msg_fail_reason_op(reason="File parsing error", op=op_undo_record_av)
+                bot_utils.send_msg_fail_reason_op(reason="文件解析出错", op=op_undo_record_av)
         elif key_type == BotKey.KEY_UNDO_RECORD_STAR_BY_STAR_NAME_ID:
             s = content.find("|")
-            op_undo_record_star = f"Unfavorite actor <code>{content[:s]}</code>"
+            op_undo_record_star = f"取消收藏演员 <code>{content[:s]}</code>"
             if BOT_DB.undo_record_star_by_id(star_id=content[s + 1 :]):
                 bot_utils.send_msg_success_op(op_undo_record_star)
             else:
-                bot_utils.send_msg_fail_reason_op(reason="File parsing error", op=op_undo_record_star)
+                bot_utils.send_msg_fail_reason_op(reason="文件解析出错", op=op_undo_record_star)
         elif key_type == BotKey.KEY_SEARCH_STAR_BY_NAME:
             star_name = content
             star_name_alias = ""
@@ -1187,7 +1187,7 @@ Avgle Video URL: {video}
                 star_name_alias = star_name[idx_alias + 1 : -1]
                 star_name = star_name[:idx_alias]
             if not bot_utils.search_star_by_name(star_name) and star_name_alias != "":
-                bot_utils.send_msg(f"Trying to search actor {star_name}'s alias {star_name_alias}......")
+                bot_utils.send_msg(f"尝试搜索演员{star_name}的别名{star_name_alias}......")
                 bot_utils.search_star_by_name(star_name_alias)
         elif key_type == BotKey.KEY_GET_TOP_STARS:
             bot_utils.get_top_stars(page=int(content))
@@ -1199,7 +1199,7 @@ Avgle Video URL: {video}
             if not avs:
                 star_name_ja = bot_utils.get_star_ja_name_by_zh_name(star_name_ori)
                 code, avs = DMM_UTIL.get_nice_avs_by_star_name(star_name=star_name_ja)
-                if bot_utils.check_success(code, f"Get high-rated av for actor {star_name_ori}"):
+                if bot_utils.check_success(code, f"获取演员 {star_name_ori} 的高分 av"):
                     avs = avs[:60]
                     BOT_CACHE_DB.set_cache(
                         key=star_name_ori,
@@ -1218,7 +1218,7 @@ Avgle Video URL: {video}
                 max_btn_per_row=3,
                 max_row_per_msg=20,
                 key_type=BotKey.KEY_GET_AV_BY_ID,
-                title=f"<b>High-rated av for actor {star_name_ori}</b>",
+                title=f"<b>演员 {star_name_ori} 的高分 av</b>",
                 objs=avs,
             )
         elif key_type == BotKey.KEY_DEL_AV_CACHE:
