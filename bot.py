@@ -662,56 +662,56 @@ Execution result: Failure, {reason} Q_Q"""
             msg += f"""【Tags】{av_tags}
 
 """
-        # 其它
-        msg += f"""【其它】<a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>
+        # Other
+        msg += f"""【Other】<a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">Project</a> | <a href="{CONTACT_AUTHOR}">Author</a>
 """
-        # 磁链
+        # Magnet
         magnet_send_to_pikpak = ""
         for i, magnet in enumerate(av_magnets):
             if i == 0:
                 magnet_send_to_pikpak = magnet["link"]
             magnet_tags = ""
             if magnet["uc"] == "1":
-                magnet_tags += "无码"
+                magnet_tags += "Uncensored "
             if magnet["hd"] == "1":
-                magnet_tags += "高清"
+                magnet_tags += "HD "
             if magnet["zm"] == "1":
-                magnet_tags += "含字幕"
-            msg_tmp = f"""【{magnet_tags}磁链-{string.ascii_letters[i].upper()} {magnet["size"]}】<code>{magnet["link"]}</code>
+                magnet_tags += "Subtitles "
+            msg_tmp = f"""【{magnet_tags}Magnet-{string.ascii_letters[i].upper()} {magnet["size"]}】<code>{magnet["link"]}</code>
 """
             if len(msg + msg_tmp) >= 2000:
                 break
             msg += msg_tmp
-        # 生成回调按钮
-        # 第一排按钮
+        # Generate callback buttons
+        # First row buttons
         pv_btn = InlineKeyboardButton(
-            text="预览", callback_data=f"{av_id}:{BotKey.KEY_WATCH_PV_BY_ID}"
+            text="Preview", callback_data=f"{av_id}:{BotKey.KEY_WATCH_PV_BY_ID}"
         )
         fv_btn = InlineKeyboardButton(
-            text="观看", callback_data=f"{av_id}:{BotKey.KEY_WATCH_FV_BY_ID}"
+            text="Watch", callback_data=f"{av_id}:{BotKey.KEY_WATCH_FV_BY_ID}"
         )
         sample_btn = InlineKeyboardButton(
-            text="截图", callback_data=f"{av_id}:{BotKey.KEY_GET_SAMPLE_BY_ID}"
+            text="Screenshot", callback_data=f"{av_id}:{BotKey.KEY_GET_SAMPLE_BY_ID}"
         )
         more_btn = InlineKeyboardButton(
-            text="更多磁链", callback_data=f"{av_id}:{BotKey.KEY_GET_MORE_MAGNETS_BY_ID}"
+            text="More Magnets", callback_data=f"{av_id}:{BotKey.KEY_GET_MORE_MAGNETS_BY_ID}"
         )
         if len(av_magnets) != 0:
             markup = InlineKeyboardMarkup().row(sample_btn, pv_btn, fv_btn, more_btn)
         else:
             markup = InlineKeyboardMarkup().row(sample_btn, pv_btn, fv_btn)
-        # 第二排按钮
-        # 收藏演员按钮
+        # Second row buttons
+        # Star record button
         star_record_btn = None
         if len(av_stars) == 1:
             if BOT_DB.check_star_exists_by_id(star_id=show_star_id):
                 star_record_btn = InlineKeyboardButton(
-                    text=f"演员收藏信息",
+                    text="Star Record",
                     callback_data=f"{show_star_name}|{show_star_id}:{BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID}",
                 )
             else:
                 star_record_btn = InlineKeyboardButton(
-                    text=f"收藏{show_star_name}",
+                    text=f"Record {show_star_name}",
                     callback_data=f"{show_star_name}|{show_star_id}:{BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID}",
                 )
         star_ids = ""
@@ -722,23 +722,23 @@ Execution result: Failure, {reason} Q_Q"""
                 break
         if star_ids != "":
             star_ids = star_ids[: len(star_ids) - 1]
-        # 收藏番号按钮
+        # AV record button
         av_record_btn = None
         if BOT_DB.check_id_exists(id=av_id):
             av_record_btn = InlineKeyboardButton(
-                text=f"番号收藏信息",
+                text="AV Record",
                 callback_data=f"{av_id}:{BotKey.KEY_GET_AV_DETAIL_RECORD_BY_ID}",
             )
         else:
             av_record_btn = InlineKeyboardButton(
-                text=f"收藏 {av_id}",
+                text=f"Record {av_id}",
                 callback_data=f"{av_id}|{star_ids}:{BotKey.KEY_RECORD_AV_BY_ID_STAR_IDS}",
             )
-        # 重新获取按钮
+        # Renew button
         renew_btn = None
         if is_cache:
             renew_btn = InlineKeyboardButton(
-                text="重新获取", callback_data=f"{av_id}:{BotKey.KEY_DEL_AV_CACHE}"
+                text="Renew", callback_data=f"{av_id}:{BotKey.KEY_DEL_AV_CACHE}"
             )
         if star_record_btn and renew_btn:
             markup.row(av_record_btn, star_record_btn, renew_btn)
@@ -748,7 +748,7 @@ Execution result: Failure, {reason} Q_Q"""
             markup.row(av_record_btn, renew_btn)
         else:
             markup.row(av_record_btn)
-        # 发送消息
+        # Send message
         if av_img == "":
             self.send_msg(msg=msg, markup=markup)
         else:
@@ -760,64 +760,64 @@ Execution result: Failure, {reason} Q_Q"""
                     parse_mode="HTML",
                     reply_markup=markup,
                 )
-            except Exception:  # 少数图片可能没法发送
+            except Exception:  # Some images may fail to send
                 self.send_msg(msg=msg, markup=markup)
-        # 发给pikpak
+        # Send to pikpak
         if BOT_CFG.use_pikpak == "1" and magnet_send_to_pikpak != "" and send_to_pikpak:
             self.send_magnet_to_pikpak(magnet_send_to_pikpak, av_id)
 
     def send_magnet_to_pikpak(self, magnet: str, id: str):
-        """发送磁链到pikpak
+        """Send magnet to pikpak
 
-        :param str magnet: 磁链
-        :param str id: 磁链对应的番号
+        :param str magnet: Magnet link
+        :param str id: Corresponding AV ID
         """
         name = PIKPAK_BOT_NAME
-        op_send_magnet_to_pikpak = f"发送番号 {id} 的磁链 A: <code>{magnet}</code> 到 pikpak"
+        op_send_magnet_to_pikpak = f"Send magnet A: <code>{magnet}</code> of AV ID {id} to pikpak"
         if self.send_msg_to_pikpak(magnet):
             self.send_msg_success_op(op_send_magnet_to_pikpak)
         else:
             self.send_msg_fail_reason_op(
-                reason="请自行检查网络或日志", op=op_send_magnet_to_pikpak
+                reason="Please check your network or logs", op=op_send_magnet_to_pikpak
             )
 
     def get_sample_by_id(self, id: str):
-        """根据番号获取 av 截图
+        """Get AV screenshots by ID
 
-        :param str id: 番号
+        :param str id: AV ID
         """
-        op_get_sample = f"根据番号 <code>{id}</code> 获取 av 截图"
-        # 获取截图
+        op_get_sample = f"Get AV screenshots for ID <code>{id}</code>"
+        # Get screenshots
         samples = BOT_CACHE_DB.get_cache(key=id, type=BotCacheDb.TYPE_SAMPLE)
         if not samples:
             code, samples = JAVBUS_UTIL.get_samples_by_id(id)
             if not self.check_success(code, op_get_sample):
                 return
             BOT_CACHE_DB.set_cache(key=id, value=samples, type=BotCacheDb.TYPE_SAMPLE)
-        # 发送图片列表
+        # Send image list
         samples_imp = []
         sample_error = False
         for sample in samples:
             samples_imp.append(InputMediaPhoto(sample))
-            if len(samples_imp) == 10:  # 图片数目达到 10 张则发送一次
+            if len(samples_imp) == 10:  # Send in batches of 10 images
                 try:
                     BOT.send_media_group(chat_id=BOT_CFG.tg_chat_id, media=samples_imp)
                     samples_imp = []
                 except Exception:
                     sample_error = True
-                    self.send_msg_fail_reason_op(reason="图片解析失败", op=op_get_sample)
+                    self.send_msg_fail_reason_op(reason="Failed to parse images", op=op_get_sample)
                     break
         if samples_imp != [] and not sample_error:
             try:
                 BOT.send_media_group(chat_id=BOT_CFG.tg_chat_id, media=samples_imp)
             except Exception:
-                self.send_msg_fail_reason_op(reason="图片解析失败", op=op_get_sample)
+                self.send_msg_fail_reason_op(reason="Failed to parse images", op=op_get_sample)
 
     def watch_av_by_id(self, id: str, type: str):
-        """获取番号对应视频
+        """Get video for AV ID
 
-        :param str id: 番号
-        :param str type: 0 预览视频 | 1 完整视频
+        :param str id: AV ID
+        :param str type: 0 - Preview video | 1 - Full video
         """
         id = id.lower()
         if id.find("fc2") != -1 and id.find("ppv") == -1:
@@ -825,7 +825,7 @@ Execution result: Failure, {reason} Q_Q"""
         if type == 0:
             pv = BOT_CACHE_DB.get_cache(key=id, type=BotCacheDb.TYPE_PV)
             if not pv:
-                op_watch_av = f"获取番号 <code>{id}</code> 对应 av 预览视频"
+                op_watch_av = f"Get preview video for AV ID <code>{id}</code>"
                 futures = {}
                 with concurrent.futures.ThreadPoolExecutor() as executor:
                     futures[executor.submit(DMM_UTIL.get_pv_by_id, id)] = 1
@@ -854,43 +854,43 @@ Execution result: Failure, {reason} Q_Q"""
             else:
                 from_site = pv["from_site"]
                 pv_src = pv["src"]
-            if from_site == "dmm":  # 优先 dmm
+            if from_site == "dmm":  # Priority: DMM
                 try:
-                    # 获取更清晰的视频地址
+                    # Get a higher-quality video URL
                     pv_src_nice = DMM_UTIL.get_nice_pv_by_src(pv_src)
-                    # 发送普通视频, 附带更清晰的视频链接
+                    # Send regular video with a link to a higher-quality version
                     BOT.send_video(
                         chat_id=BOT_CFG.tg_chat_id,
                         video=pv_src,
-                        caption=f'通过 DMM 搜索得到结果, <a href="{pv_src_nice}">在这里观看更清晰的版本</a>',
+                        caption=f'Results obtained through DMM, <a href="{pv_src_nice}">watch a higher-quality version here</a>',
                         parse_mode="HTML",
                     )
                 except Exception:
                     self.send_msg(
-                        f'通过 DMM 搜索得到结果, 但视频解析失败: <a href="{pv_src_nice}">视频地址</a> Q_Q'
+                        f'Results obtained through DMM, but failed to parse the video: <a href="{pv_src_nice}">Video URL</a> Q_Q'
                     )
             elif from_site == "avgle":
                 try:
                     BOT.send_video(
                         chat_id=BOT_CFG.tg_chat_id,
                         video=pv_src,
-                        caption=f'通过 Avgle 搜索得到结果: <a href="{pv_src}">视频地址</a>',
+                        caption=f'Results obtained through Avgle: <a href="{pv_src}">Video URL</a>',
                         parse_mode="HTML",
                     )
                 except Exception:
                     self.send_msg(
-                        f'通过 Avgle 搜索得到结果, 但视频解析失败: <a href="{pv_src}">视频地址</a> Q_Q'
+                        f'Results obtained through Avgle, but failed to parse the video: <a href="{pv_src}">Video URL</a> Q_Q'
                     )
         elif type == 1:
             video = BOT_CACHE_DB.get_cache(key=id, type=BotCacheDb.TYPE_FV)
             if not video:
                 code, video = AVGLE_UTIL.get_fv_by_id(id)
                 if code != 200:
-                    self.send_msg(f"MissAv 视频地址: {BASE_URL_MISS_AV}/{id}")
+                    self.send_msg(f"MissAv video: {BASE_URL_MISS_AV}/{id}")
                     return
                 BOT_CACHE_DB.set_cache(key=id, value=video, type=BotCacheDb.TYPE_FV)
             self.send_msg(
-                f"""MissAv 视频地址: {BASE_URL_MISS_AV}/{id}
+                f"MissAv video: {BASE_URL_MISS_AV}/{id}"
 
 Avgle 视频地址: {video}
 """
