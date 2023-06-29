@@ -831,9 +831,9 @@ Execution result: Failure, {reason} Q_Q"""
                     futures[executor.submit(DMM_UTIL.get_pv_by_id, id)] = 2
                     futures[executor.submit(AVGLE_UTIL.get_pv_by_id, id)] = 1
                     for future in concurrent.futures.as_completed(futures):
-                        if futures[future] == 1:
+                        if futures[future] == 2:
                             code_dmm, pv_dmm = future.result()
-                        elif futures[future] == 2:
+                        elif futures[future] == 1:
                             code_avgle, pv_avgle = future.result()
                 if code_dmm != 200 and code_avgle != 200:
                     if code_dmm == 502 or code_avgle == 502:
