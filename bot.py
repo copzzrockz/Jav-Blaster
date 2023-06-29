@@ -828,8 +828,8 @@ Execution result: Failure, {reason} Q_Q"""
                 op_watch_av = f"Get preview video for AV ID <code>{id}</code>"
                 futures = {}
                 with concurrent.futures.ThreadPoolExecutor() as executor:
-                    futures[executor.submit(DMM_UTIL.get_pv_by_id, id)] = 1
-                    futures[executor.submit(AVGLE_UTIL.get_pv_by_id, id)] = 2
+                    futures[executor.submit(DMM_UTIL.get_pv_by_id, id)] = 2
+                    futures[executor.submit(AVGLE_UTIL.get_pv_by_id, id)] = 1
                     for future in concurrent.futures.as_completed(futures):
                         if futures[future] == 1:
                             code_dmm, pv_dmm = future.result()
