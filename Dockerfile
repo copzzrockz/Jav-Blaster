@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN apt install git -y
+RUN apt update && apt install -y git
 
 RUN pip3 install -U -r requirements.txt
 
