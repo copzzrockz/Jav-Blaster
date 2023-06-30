@@ -7,7 +7,7 @@ colorama==0.4.6 ; sys_platform == 'win32'
 deep-translator==1.10.1
 idna==3.4 ; python_version >= '3.5'
 importlib-metadata==6.6.0 ; python_version < '3.8'
-jvav==1.2.28
+git+https://github.com/Rgtchoco/jvav
 langdetect==1.0.9
 loguru==0.7.0 ; python_version >= '3.5'
 lxml==4.9.2
@@ -26,3 +26,4 @@ urllib3==1.26.15 ; python_version >= '2.7' and python_version not in '3.0, 3.1, 
 wikipedia-api==0.5.8
 win32-setctime==1.1.0 ; sys_platform == 'win32'
 zipp==3.15.0 ; python_version >= '3.7'
+#jvav==1.2.28
