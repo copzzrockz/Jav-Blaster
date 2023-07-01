@@ -514,8 +514,8 @@ class BotUtils:
         # 获取 av
         op_get_av_by_id = f"Search ID <code>{id}</code>"
         av = BOT_CACHE_DB.get_cache(key=id, type=BotCacheDb.TYPE_AV)
-        av_score = av
-        is_cache = True
+        av_score = NONE
+        is_cache = False
         futures = {}
         if not av or not_send:
             with concurrent.futures.ThreadPoolExecutor() as executor:
@@ -575,7 +575,6 @@ class BotUtils:
         # 提取数据
         av_id = id
         av_title = av["title"]
-        av_score = av["score"]
         av_img = av["img"]
         av_date = av["date"]
         av_tags = av["tags"]
