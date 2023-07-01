@@ -591,18 +591,18 @@ class BotUtils:
             if av_title_ch:
                 av_title = av_title_ch
             av_title = av_title.replace("<", "").replace(">", "")
-            msg += f"""【标题】<a href="{av_url}">{av_title}</a>
+            msg += f"""Title: <a href="{av_url}">{av_title}</a>
 """
         # 番号
-        msg += f"""【番号】<code>{av_id}</code>
+        msg += f"""Product ID: <code>{av_id}</code>
 """
         # 日期
         if av_date != "":
-            msg += f"""【日期】{av_date}
+            msg += f"""Release Date: {av_date}
 """
         # 评分
         if av_score:
-            msg += f"""【评分】{av_score}
+            msg += f"""Ratings: {av_score}/5
 """
         # 演员
         if av_stars != []:
@@ -643,10 +643,10 @@ class BotUtils:
                         if wiki_json and wiki_json["lang"] == "zh":
                             name_zh = wiki_json["title"]
                             wiki_zh = wiki_json["url"]
-                            stars_msg += f"""【演员】<code>{name_zh}</code> | <a href="{wiki_zh}">Wiki</a> | <a href="{link}">Javbus</a>
+                            stars_msg += f"""Actor: <code>{name_zh}</code> | <a href="{wiki_zh}">Wiki</a> | <a href="{link}">Javbus</a>
 """
                         else:
-                            stars_msg += f"""【演员】<code>{name}</code> | <a href="{wiki}">Wiki</a> | <a href="{link}">Javbus</a>
+                            stars_msg += f"""Actor: <code>{name}</code> | <a href="{wiki}">Wiki</a> | <a href="{link}">Javbus</a>
 """
                 if more_star_msg != "":
                     stars_msg += more_star_msg
@@ -657,10 +657,10 @@ class BotUtils:
         # 标签
         if av_tags != "":
             av_tags = av_tags.replace("<", "").replace(">", "")
-            msg += f"""【标签】{av_tags}
+            msg += f"""Tags: {av_tags}
 """
         # 其它
-        msg += f"""【其它】<a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>
+        msg += f"""Others: <a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>
 """
         # 磁链
         magnet_send_to_pikpak = ""
@@ -669,12 +669,12 @@ class BotUtils:
                 magnet_send_to_pikpak = magnet["link"]
             magnet_tags = ""
             if magnet["uc"] == "1":
-                magnet_tags += "无码"
+                magnet_tags += "UNCENSORED"
             if magnet["hd"] == "1":
-                magnet_tags += "高清"
+                magnet_tags += "HD"
             if magnet["zm"] == "1":
-                magnet_tags += "含字幕"
-            msg_tmp = f"""【{magnet_tags}磁链-{string.ascii_letters[i].upper()} {magnet["size"]}】<code>{magnet["link"]}</code>
+                magnet_tags += "JAPANESE SUB"
+            msg_tmp = f"""[{magnet_tags}Magnet Links ~ {string.ascii_letters[i].upper()} {magnet["size"]}] <code>{magnet["link"]}</code>
 """
             if len(msg + msg_tmp) >= 2000:
                 break
@@ -682,16 +682,16 @@ class BotUtils:
         # 生成回调按钮
         # 第一排按钮
         pv_btn = InlineKeyboardButton(
-            text="预览", callback_data=f"{av_id}:{BotKey.KEY_WATCH_PV_BY_ID}"
+            text="Preview", callback_data=f"{av_id}:{BotKey.KEY_WATCH_PV_BY_ID}"
         )
         fv_btn = InlineKeyboardButton(
-            text="观看", callback_data=f"{av_id}:{BotKey.KEY_WATCH_FV_BY_ID}"
+            text="Watch", callback_data=f"{av_id}:{BotKey.KEY_WATCH_FV_BY_ID}"
         )
         sample_btn = InlineKeyboardButton(
-            text="截图", callback_data=f"{av_id}:{BotKey.KEY_GET_SAMPLE_BY_ID}"
+            text="Screens", callback_data=f"{av_id}:{BotKey.KEY_GET_SAMPLE_BY_ID}"
         )
         more_btn = InlineKeyboardButton(
-            text="更多磁链", callback_data=f"{av_id}:{BotKey.KEY_GET_MORE_MAGNETS_BY_ID}"
+            text="More Magnets", callback_data=f"{av_id}:{BotKey.KEY_GET_MORE_MAGNETS_BY_ID}"
         )
         if len(av_magnets) != 0:
             markup = InlineKeyboardMarkup().row(sample_btn, pv_btn, fv_btn, more_btn)
@@ -703,12 +703,12 @@ class BotUtils:
         if len(av_stars) == 1:
             if BOT_DB.check_star_exists_by_id(star_id=show_star_id):
                 star_record_btn = InlineKeyboardButton(
-                    text=f"演员收藏信息",
+                    text=f"Actor Collection Information",
                     callback_data=f"{show_star_name}|{show_star_id}:{BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID}",
                 )
             else:
                 star_record_btn = InlineKeyboardButton(
-                    text=f"收藏{show_star_name}",
+                    text=f"Record {show_star_name}",
                     callback_data=f"{show_star_name}|{show_star_id}:{BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID}",
                 )
         star_ids = ""
@@ -723,19 +723,19 @@ class BotUtils:
         av_record_btn = None
         if BOT_DB.check_id_exists(id=av_id):
             av_record_btn = InlineKeyboardButton(
-                text=f"番号收藏信息",
+                text=f"ID Collection Information",
                 callback_data=f"{av_id}:{BotKey.KEY_GET_AV_DETAIL_RECORD_BY_ID}",
             )
         else:
             av_record_btn = InlineKeyboardButton(
-                text=f"收藏 {av_id}",
+                text=f"Record {av_id}",
                 callback_data=f"{av_id}|{star_ids}:{BotKey.KEY_RECORD_AV_BY_ID_STAR_IDS}",
             )
         # 重新获取按钮
         renew_btn = None
         if is_cache:
             renew_btn = InlineKeyboardButton(
-                text="重新获取", callback_data=f"{av_id}:{BotKey.KEY_DEL_AV_CACHE}"
+                text="Renew", callback_data=f"{av_id}:{BotKey.KEY_DEL_AV_CACHE}"
             )
         if star_record_btn and renew_btn:
             markup.row(av_record_btn, star_record_btn, renew_btn)
@@ -775,7 +775,7 @@ class BotUtils:
             self.send_msg_success_op(op_send_magnet_to_pikpak)
         else:
             self.send_msg_fail_reason_op(
-                reason="请自行检查网络或日志", op=op_send_magnet_to_pikpak
+                reason="Please check the network or logs yourself", op=op_send_magnet_to_pikpak
             )
 
     def get_sample_by_id(self, id: str):
@@ -783,7 +783,7 @@ class BotUtils:
 
         :param str id: 番号
         """
-        op_get_sample = f"根据番号 <code>{id}</code> 获取 av 截图"
+        op_get_sample = f"According to ID <code>{id}</code> get AV Screenshot"
         # 获取截图
         samples = BOT_CACHE_DB.get_cache(key=id, type=BotCacheDb.TYPE_SAMPLE)
         if not samples:
@@ -802,13 +802,13 @@ class BotUtils:
                     samples_imp = []
                 except Exception:
                     sample_error = True
-                    self.send_msg_fail_reason_op(reason="图片解析失败", op=op_get_sample)
+                    self.send_msg_fail_reason_op(reason="Image parsing failed", op=op_get_sample)
                     break
         if samples_imp != [] and not sample_error:
             try:
                 BOT.send_media_group(chat_id=BOT_CFG.tg_chat_id, media=samples_imp)
             except Exception:
-                self.send_msg_fail_reason_op(reason="图片解析失败", op=op_get_sample)
+                self.send_msg_fail_reason_op(reason="Image parsing failed", op=op_get_sample)
 
     def watch_av_by_id(self, id: str, type: str):
         """获取番号对应视频
@@ -1215,7 +1215,7 @@ def handle_callback(call):
             max_btn_per_row=3,
             max_row_per_msg=20,
             key_type=BotKey.KEY_GET_AV_BY_ID,
-            title=f"<b>演员 {star_name_ori} 的高分 av</b>",
+            title=f"<b>Actor {star_name_ori} Highest Rating AV</b>",
             objs=avs,
         )
     elif key_type == BotKey.KEY_DEL_AV_CACHE:
@@ -1238,7 +1238,7 @@ def handle_message(message):
         LOG.info(f"拦截到非目标用户请求, id: {chat_id}")
         BOT.send_message(
             chat_id=chat_id,
-            text=f'该机器人仅供私人使用, 如需使用请自行部署: <a href="{PROJECT_ADDRESS}">项目地址</a>',
+            text=f'This robot is for private use only, if you want to use it, please deploy it yourself: <a href="{PROJECT_ADDRESS}">Project</a>',
             parse_mode="HTML",
         )
         return
@@ -1250,7 +1250,7 @@ def handle_message(message):
         msg = message.text
     if not msg:
         return
-    LOG.info(f'收到消息: "{msg}"')
+    LOG.info(f'Received Moves: "{msg}"')
     msg = msg.lower().strip()
     msgs = msg.split(" ", 1)  # 划分为两部分
     # 消息命令
@@ -1325,7 +1325,7 @@ def handle_message(message):
             ids = [id.lower() for id in ids]
             ids = set(ids)
             ids_msg = ", ".join(ids)
-            bot_utils.send_msg(f"检测到番号: {ids_msg}, 开始搜索......")
+            bot_utils.send_msg(f"ID Detected: {ids_msg}, Searching...")
             for i, id in enumerate(ids):
                 threading.Thread(target=bot_utils.get_av_by_id, args=(id,)).start()
 
@@ -1353,21 +1353,21 @@ def my_message_handler(message):
 
 def pyrogram_auth():
     if BOT_CFG.use_pikpak == "1" and not os.path.exists(f"{PATH_SESSION_FILE}.session"):
-        LOG.info(f"进行 pyrogram 登录认证......")
+        LOG.info(f"Perform pyrogram login authentication......")
         try:
             BotUtils().send_msg_to_pikpak("pyrogram 登录认证")
-            LOG.info(f"pyrogram 登录认证成功")
+            LOG.info(f"pyrogram login authentication succeeded")
         except BaseException as e:
-            LOG.error(f"pyrogram 登录认证失败: {e}")
+            LOG.error(f"pyrogram login authentication failed: {e}")
 
 
 def main():
     pyrogram_auth()
     try:
         bot_info = BOT.get_me()
-        LOG.info(f"连接到机器人: @{bot_info.username} (ID: {bot_info.id})")
+        LOG.info(f"Connected to robot: @{bot_info.username} (ID: {bot_info.id})")
     except Exception as e:
-        LOG.error(f"无法连接到机器人: {e}")
+        LOG.error(f"Can't connect to robot: {e}")
         return
     BOT.set_my_commands([types.BotCommand(cmd, BOT_CMDS[cmd]) for cmd in BOT_CMDS])
     BOT.infinity_polling()
