@@ -575,6 +575,7 @@ class BotUtils:
         # 提取数据
         av_id = id
         av_title = av["title"]
+        av_score = av["score"]
         av_img = av["img"]
         av_date = av["date"]
         av_tags = av["tags"]
@@ -660,8 +661,7 @@ class BotUtils:
             msg += f"""Tags: {av_tags}
 """
         # 其它
-        #msg += f"""Others: <a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>
-"""
+        #msg += f"""Others: <a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>"""
         # 磁链
         magnet_send_to_pikpak = ""
         for i, magnet in enumerate(av_magnets):
