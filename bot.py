@@ -575,7 +575,6 @@ class BotUtils:
         # 提取数据
         av_id = id
         av_title = av["title"]
-        av_score = av["score"]
         av_img = av["img"]
         av_date = av["date"]
         av_tags = av["tags"]
