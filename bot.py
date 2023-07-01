@@ -675,8 +675,7 @@ class BotUtils:
                 magnet_tags += "HD"
             if magnet["zm"] == "1":
                 magnet_tags += "JAP SUB"
-            msg_tmp = f"""[{magnet_tags} ~ {string.ascii_letters[i].upper()} {magnet["size"]}] <code>{magnet["link"]}</code>
-"""
+            msg_tmp = f"""Download Links: [{magnet_tags} ~ {string.ascii_letters[i].upper()} {magnet["size"]}] <code>{magnet["link"]}</code>"""
             if len(msg + msg_tmp) >= 2000:
                 break
             msg += msg_tmp
