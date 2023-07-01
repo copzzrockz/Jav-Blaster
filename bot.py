@@ -592,7 +592,7 @@ class BotUtils:
             if av_title_ch:
                 av_title = av_title_ch
             av_title = av_title.replace("<", "").replace(">", "")
-            msg += f"""Title: <code>{av_title}</code>
+            msg += f"""Title: <i><a href="{av_url}">{av_title}</a></i>
 """
         # 番号
         msg += f"""Product ID: <code>{av_id}</code>
@@ -602,7 +602,7 @@ class BotUtils:
             msg += f"""Release Date: <code>{av_date}</code>
 """
         # 评分
-        if av_score:
+        if av_score != "":
             msg += f"""Ratings: <code>{av_score}/5</code>
 """
         # 演员
@@ -671,10 +671,10 @@ class BotUtils:
             if magnet["uc"] == "1":
                 magnet_tags += " UNCENSORED "
             if magnet["hd"] == "1":
-                magnet_tags += " HD "
+                magnet_tags += "HD"
             if magnet["zm"] == "1":
                 magnet_tags += " JAP SUB "
-            msg_tmp = f"""Magnet Links: [{magnet_tags} {magnet["size"]}] <code>{magnet["link"]}</code>
+            msg_tmp = f"""Magnet Links: [{magnet_tags} {magnet["size"]}] >>> <code>{magnet["link"]}</code>
 """
             if len(msg + msg_tmp) >= 2000:
                 break
