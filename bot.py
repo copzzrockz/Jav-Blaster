@@ -20,30 +20,31 @@ from config import BotConfig
 from database import BotFileDb, BotCacheDb
 
 
-# TG 地址
+# TG address
 BASE_URL_TG = "https://t.me"
-# MissAv 地址
+# MissAv address
 BASE_URL_MISS_AV = "https://missav.com"
-# 项目地址
+# Project address
 PROJECT_ADDRESS = "https://github.com/akynazh/tg-jav-bot"
-# 默认使用官方机器人: https://t.me/PikPak6_Bot
+# Default to use official bot: https://t.me/PikPak6_Bot
 PIKPAK_BOT_NAME = "PikPak6_Bot"
-# 联系作者
+# Contact the author
 CONTACT_AUTHOR = f"{BASE_URL_TG}/jackbryant286"
-# 文件存储目录位置
+# File storage directory location
 PATH_ROOT = f'{os.path.expanduser("~")}/.tg_jav_bot'
-# 日志文件位置
+# Log file location
 PATH_LOG_FILE = f"{PATH_ROOT}/log.txt"
-# 记录文件位置
+# Record file location
 PATH_RECORD_FILE = f"{PATH_ROOT}/record.json"
-# my_account.session 文件位置
+# my_account.session file location
 PATH_SESSION_FILE = f"{PATH_ROOT}/my_account"
-# 配置文件位置
+# Configuration file location
 PATH_CONFIG_FILE = f"config.yaml"
-# 正则匹配 AV
+# Regular expression for matching AV codes
 AV_PAT = re.compile(r"[a-z0-9]+[-_](?:ppv-)?[a-z0-9]+")
-# 帮助消息
-MSG_HELP = f"""Hey, I am Powerful an AV Fan!
+# Help message
+MSG_HELP = f"""Hey, I am an Powerful AV Bot!
+
 
 /help - Need any help!
 /stars - View favorite actors.
