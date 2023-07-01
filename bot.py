@@ -1227,43 +1227,42 @@ def handle_callback(call):
         BOT_CACHE_DB.remove_cache(key=content, type=BotCacheDb.TYPE_STARS_MSG)
         bot_utils.get_av_by_id(id=content)
 
-
 def handle_message(message):
-    """处理消息
+    """Handle message
 
-    :param _type_ message
+    :param message: Message object
     """
-    # 回显 typing...
+    # Echo typing...
     bot_utils = BotUtils()
     bot_utils.send_action_typing()
-    # 拦截请求
+    # Intercept requests
     chat_id = str(message.chat.id)
     if chat_id.lower() != BOT_CFG.tg_chat_id.lower():
-        LOG.info(f"拦截到非目标用户请求, id: {chat_id}")
+        LOG.info(f"Intercepted request from non-target user, id: {chat_id}")
         BOT.send_message(
             chat_id=chat_id,
-            text=f'该机器人仅供私人使用, 如需使用请自行部署: <a href="{PROJECT_ADDRESS}">项目地址</a>',
+            text=f'This bot is for private use only. If you want to use it, please deploy it yourself: <a href="{PROJECT_ADDRESS}">Project Address</a>',
             parse_mode="HTML",
         )
         return
     bot_utils = BotUtils()
-    # 获取消息文本内容
+    # Get message text content
     if message.content_type != "text":
         msg = message.caption
     else:
         msg = message.text
     if not msg:
         return
-    LOG.info(f'收到消息: "{msg}"')
+    LOG.info(f'Received message: "{msg}"')
     msg = msg.lower().strip()
-    msgs = msg.split(" ", 1)  # 划分为两部分
-    # 消息命令
+    msgs = msg.split(" ", 1)  # Split into two parts
+    # Message command
     msg_cmd = msgs[0]
-    # 消息参数
+    # Message parameter
     msg_param = ""
-    if len(msgs) > 1:  # 有参数
+    if len(msgs) > 1:  # Has parameter
         msg_param = msgs[1].strip()
-    # 处理消息
+    # Handle message
     if msg_cmd == "/help" or msg_cmd == "/start":
         bot_utils.send_msg(MSG_HELP)
     elif msg_cmd == "/nice":
@@ -1273,7 +1272,7 @@ def handle_message(message):
             code, ids = JAVLIB_UTIL.get_random_ids_from_rank_by_page(
                 page=page, list_type=0
             )
-            if bot_utils.check_success(code, "随机获取高分 av"):
+            if bot_utils.check_success(code, "Get random high-rated av"):
                 BOT_CACHE_DB.set_cache(
                     key=page,
                     value=ids,
@@ -1289,7 +1288,7 @@ def handle_message(message):
             code, ids = JAVLIB_UTIL.get_random_ids_from_rank_by_page(
                 page=page, list_type=1
             )
-            if bot_utils.check_success(code, "随机获取最新 av"):
+            if bot_utils.check_success(code, "Get random latest av"):
                 BOT_CACHE_DB.set_cache(
                     key=page,
                     value=ids,
@@ -1308,28 +1307,28 @@ def handle_message(message):
                 chat_id=BOT_CFG.tg_chat_id, document=types.InputFile(PATH_RECORD_FILE)
             )
         else:
-            bot_utils.send_msg_fail_reason_op(reason="尚无收藏记录", op="获取收藏记录文件")
+            bot_utils.send_msg_fail_reason_op(reason="No collection record yet", op="Get collection record file")
     elif msg_cmd == "/rank":
         bot_utils.get_top_stars(1)
     elif msg_cmd == "/star":
         if msg_param != "":
-            bot_utils.send_msg(f"搜索演员: <code>{msg_param}</code> ......")
+            bot_utils.send_msg(f"Searching for actor: <code>{msg_param}</code> ......")
             bot_utils.search_star_by_name(msg_param)
     elif msg_cmd == "/av":
         if msg_param:
-            bot_utils.send_msg(f"搜索番号: <code>{msg_param}</code> ......")
+            bot_utils.send_msg(f"Searching for code: <code>{msg_param}</code> ......")
             bot_utils.get_av_by_id(id=msg_param, send_to_pikpak=True)
     else:
         ids = AV_PAT.findall(msg)
         if not ids or len(ids) == 0:
             bot_utils.send_msg(
-                "消息似乎不存在符合规则的番号, 可尝试通过“<code>/av</code> 番号”进行查找, 通过 /help 命令可获得帮助 ~"
+                "The message does not seem to contain valid codes. You can try searching by using '/av code'. Use the '/help' command for assistance ~"
             )
         else:
             ids = [id.lower() for id in ids]
             ids = set(ids)
             ids_msg = ", ".join(ids)
-            bot_utils.send_msg(f"检测到番号: {ids_msg}, 开始搜索......")
+            bot_utils.send_msg(f"Detected codes: {ids_msg}, searching......")
             for i, id in enumerate(ids):
                 threading.Thread(target=bot_utils.get_av_by_id, args=(id,)).start()
 
@@ -1339,39 +1338,39 @@ EXECUTOR = concurrent.futures.ThreadPoolExecutor()
 
 @BOT.callback_query_handler(func=lambda call: True)
 def my_callback_handler(call):
-    """消息回调处理器
+    """Callback handler for messages
 
-    :param _type_ call
+    :param call: CallbackQuery object
     """
     EXECUTOR.submit(handle_callback, call)
 
 
 @BOT.message_handler(content_types=["text", "photo", "animation", "video", "document"])
 def my_message_handler(message):
-    """消息处理器
+    """Message handler
 
-    :param _type_ message: 消息
+    :param message: Message object
     """
     EXECUTOR.submit(handle_message, message)
 
 
 def pyrogram_auth():
     if BOT_CFG.use_pikpak == "1" and not os.path.exists(f"{PATH_SESSION_FILE}.session"):
-        LOG.info(f"进行 pyrogram 登录认证......")
+        LOG.info(f"Performing pyrogram authentication......")
         try:
-            BotUtils().send_msg_to_pikpak("pyrogram 登录认证")
-            LOG.info(f"pyrogram 登录认证成功")
+            BotUtils().send_msg_to_pikpak("Pyrogram authentication")
+            LOG.info(f"Pyrogram authentication successful")
         except BaseException as e:
-            LOG.error(f"pyrogram 登录认证失败: {e}")
+            LOG.error(f"Pyrogram authentication failed: {e}")
 
 
 def main():
     pyrogram_auth()
     try:
         bot_info = BOT.get_me()
-        LOG.info(f"连接到机器人: @{bot_info.username} (ID: {bot_info.id})")
+        LOG.info(f"Connected to bot: @{bot_info.username} (ID: {bot_info.id})")
     except Exception as e:
-        LOG.error(f"无法连接到机器人: {e}")
+        LOG.error(f"Unable to connect to bot: {e}")
         return
     BOT.set_my_commands([types.BotCommand(cmd, BOT_CMDS[cmd]) for cmd in BOT_CMDS])
     BOT.infinity_polling()
