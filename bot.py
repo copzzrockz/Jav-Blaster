@@ -942,34 +942,34 @@ Avgle 视频地址: {video}
             markup=markup,
         )
         return True
-
+    
     def get_top_stars(self, page=1):
-        """根据页数获取 DMM 女优排行榜, 每页 20 位女优
-
-        :param int page: 第几页, 默认第一页
-        """
-        op_get_top_stars = f"获取 DMM 女优排行榜"
-        stars = BOT_CACHE_DB.get_cache(key=page, type=BotCacheDb.TYPE_RANK)
-
-        if not stars:
-            code, stars = DMM_UTIL.get_top_stars(page)
-            if not self.check_success(code, op_get_top_stars):
-                return
-            BOT_CACHE_DB.set_cache(key=page, value=stars, type=BotCacheDb.TYPE_RANK)
-        stars_tmp = [None] * 80
-        stars = stars_tmp[: ((page - 1) * 20)] + stars + stars_tmp[((page - 1) * 20) :]
-        col, row = 4, 5
-        objs, page_btns, title = self.get_page_elements(
-            objs=stars, page=page, col=4, row=5, key_type=BotKey.KEY_GET_TOP_STARS
-        )
-        self.send_msg_btns(
-            max_btn_per_row=col,
-            max_row_per_msg=row,
-            key_type=BotKey.KEY_SEARCH_STAR_BY_NAME,
-            title="<b>DMM 女优排行榜: </b>" + title,
-            objs=objs,
-            page_btns=page_btns,
-        )
+            """Get top stars from DMM, 20 stars per page
+        
+            :param int page: Page number, default is 1
+            """
+            op_get_top_stars = f"Get top stars from DMM"
+            stars = BOT_CACHE_DB.get_cache(key=page, type=BotCacheDb.TYPE_RANK)
+        
+            if not stars:
+                code, stars = DMM_UTIL.get_top_stars(page)
+                if not self.check_success(code, op_get_top_stars):
+                    return
+                BOT_CACHE_DB.set_cache(key=page, value=stars, type=BotCacheDb.TYPE_RANK)
+            stars_tmp = [None] * 80
+            stars = stars_tmp[: ((page - 1) * 20)] + stars + stars_tmp[((page - 1) * 20) :]
+            col, row = 4, 5
+            objs, page_btns, title = self.get_page_elements(
+                objs=stars, page=page, col=4, row=5, key_type=BotKey.KEY_GET_TOP_STARS
+            )
+            self.send_msg_btns(
+                max_btn_per_row=col,
+                max_row_per_msg=row,
+                key_type=BotKey.KEY_SEARCH_STAR_BY_NAME,
+                title="<b>DMM Top Stars: </b>" + title,
+                objs=objs,
+                page_btns=page_btns,
+            )
 
     def send_msg_to_pikpak(self, msg):
         """发送消息到Pikpak机器人
