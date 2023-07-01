@@ -331,7 +331,7 @@ class BotUtils:
             text=">>", callback_data=f"{page_count}:{key_type}"
         )
         # 获取数量标题
-        title = f"总数: <b>{record_count_total}</b>, 总页数: <b>{page_count}</b>"
+        title = f"Total: <b>{record_count_total} Pages</b>, on Page: <b>{page_count}</b>"
         return (
             objs,
             [btn_to_first, btn_to_previous, btn_to_current, btn_to_next, btn_to_last],
@@ -396,25 +396,25 @@ class BotUtils:
                     cur_star_exists = True
         # 发送按钮消息
         extra_btn1 = InlineKeyboardButton(
-            text=f"随机 av",
+            text=f"Random AV",
             callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RANDOM_GET_AV_BY_STAR_ID}",
         )
         extra_btn2 = InlineKeyboardButton(
-            text=f"最新 av",
+            text=f"Latest AV",
             callback_data=f"{star_name}|{star_id}:{BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID}",
         )
         extra_btn3 = InlineKeyboardButton(
-            text=f"高分 av",
+            text=f"High Rated AV",
             callback_data=f"{star_name}:{BotKey.KEY_GET_NICE_AVS_BY_STAR_NAME}",
         )
         if cur_star_exists:
             extra_btn4 = InlineKeyboardButton(
-                text=f"取消收藏",
+                text=f"Cancel Record",
                 callback_data=f"{star_name}|{star_id}:{BotKey.KEY_UNDO_RECORD_STAR_BY_STAR_NAME_ID}",
             )
         else:
             extra_btn4 = InlineKeyboardButton(
-                text=f"收藏演员",
+                text=f"Record Actor by ID",
                 callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID}",
             )
         title = f'<code>{star_name}</code> | <a href="{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{star_name}">Wiki</a> | <a href="{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_ID}/{star_id}">Javbus</a>'
@@ -446,10 +446,10 @@ class BotUtils:
         avs.reverse()
         # 发送按钮消息
         extra_btn1 = InlineKeyboardButton(
-            text="随机高分 av", callback_data=f"0:{BotKey.KEY_RANDOM_GET_AV_NICE}"
+            text="Random High Rating AV", callback_data=f"0:{BotKey.KEY_RANDOM_GET_AV_NICE}"
         )
         extra_btn2 = InlineKeyboardButton(
-            text="随机最新 av", callback_data=f"0:{BotKey.KEY_RANDOM_GET_AV_NEW}"
+            text="Random Latest AV", callback_data=f"0:{BotKey.KEY_RANDOM_GET_AV_NEW}"
         )
         col, row = 4, 10
         objs, page_btns, title = self.get_page_elements(
@@ -459,7 +459,7 @@ class BotUtils:
             max_btn_per_row=col,
             max_row_per_msg=row,
             key_type=BotKey.KEY_GET_AV_DETAIL_RECORD_BY_ID,
-            title="<b>收藏的番号: </b>" + title,
+            title="<b>Record ID: </b>" + title,
             objs=objs,
             extra_btns=[[extra_btn1, extra_btn2]],
             page_btns=page_btns,
@@ -478,13 +478,13 @@ class BotUtils:
                 cur_av_exists = True
         markup = InlineKeyboardMarkup()
         btn = InlineKeyboardButton(
-            text=f"获取对应 av", callback_data=f"{id}:{BotKey.KEY_GET_AV_BY_ID}"
+            text=f"Related AV", callback_data=f"{id}:{BotKey.KEY_GET_AV_BY_ID}"
         )
         if cur_av_exists:
             markup.row(
                 btn,
                 InlineKeyboardButton(
-                    text=f"取消收藏",
+                    text=f"Cancel Record",
                     callback_data=f"{id}:{BotKey.KEY_UNDO_RECORD_AV_BY_ID}",
                 ),
             )
@@ -512,7 +512,7 @@ class BotUtils:
         :return dict: 当不发送 av 结果时, 返回得到的 av(如果有)
         """
         # 获取 av
-        op_get_av_by_id = f"搜索番号 <code>{id}</code>"
+        op_get_av_by_id = f"Search ID <code>{id}</code>"
         av = BOT_CACHE_DB.get_cache(key=id, type=BotCacheDb.TYPE_AV)
         av_score = None
         is_cache = False
@@ -575,6 +575,7 @@ class BotUtils:
         # 提取数据
         av_id = id
         av_title = av["title"]
+        av_score = av["score"]
         av_img = av["img"]
         av_date = av["date"]
         av_tags = av["tags"]
@@ -591,18 +592,18 @@ class BotUtils:
             if av_title_ch:
                 av_title = av_title_ch
             av_title = av_title.replace("<", "").replace(">", "")
-            msg += f"""Title: <a href="{av_url}">{av_title}</a>
+            msg += f"""Title: `{av_title}`
 """
         # 番号
         msg += f"""Product ID: <code>{av_id}</code>
 """
         # 日期
         if av_date != "":
-            msg += f"""Release Date: {av_date}
+            msg += f"""Release Date: `{av_date}`
 """
         # 评分
         if av_score:
-            msg += f"""Ratings: {av_score}/5
+            msg += f"""Ratings: `{av_score}/5`
 """
         # 演员
         if av_stars != []:
@@ -643,10 +644,10 @@ class BotUtils:
                         if wiki_json and wiki_json["lang"] == "zh":
                             name_zh = wiki_json["title"]
                             wiki_zh = wiki_json["url"]
-                            stars_msg += f"""Actor: <code>{name_zh}</code> | <a href="{wiki_zh}">Wiki</a> | <a href="{link}">Javbus</a>
+                            stars_msg += f"""Actor: <code>{name_zh}</code>
 """
                         else:
-                            stars_msg += f"""Actor: <code>{name}</code> | <a href="{wiki}">Wiki</a> | <a href="{link}">Javbus</a>
+                            stars_msg += f"""Actor: <code>{name}</code>
 """
                 if more_star_msg != "":
                     stars_msg += more_star_msg
@@ -660,7 +661,7 @@ class BotUtils:
             msg += f"""Tags: {av_tags}
 """
         # 其它
-        msg += f"""Others: <a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>
+        #msg += f"""Others: <a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>
 """
         # 磁链
         magnet_send_to_pikpak = ""
@@ -673,8 +674,8 @@ class BotUtils:
             if magnet["hd"] == "1":
                 magnet_tags += "HD"
             if magnet["zm"] == "1":
-                magnet_tags += "JAPANESE SUB"
-            msg_tmp = f"""[{magnet_tags}Magnet Links ~ {string.ascii_letters[i].upper()} {magnet["size"]}] <code>{magnet["link"]}</code>
+                magnet_tags += "JAP SUB"
+            msg_tmp = f"""Magnet Links: [{magnet_tags} ~ {string.ascii_letters[i].upper()} {magnet["size"]}] <code>{magnet["link"]}</code>
 """
             if len(msg + msg_tmp) >= 2000:
                 break
@@ -691,7 +692,7 @@ class BotUtils:
             text="Screens", callback_data=f"{av_id}:{BotKey.KEY_GET_SAMPLE_BY_ID}"
         )
         more_btn = InlineKeyboardButton(
-            text="More Magnets", callback_data=f"{av_id}:{BotKey.KEY_GET_MORE_MAGNETS_BY_ID}"
+            text="More", callback_data=f"{av_id}:{BotKey.KEY_GET_MORE_MAGNETS_BY_ID}"
         )
         if len(av_magnets) != 0:
             markup = InlineKeyboardMarkup().row(sample_btn, pv_btn, fv_btn, more_btn)
@@ -887,7 +888,7 @@ class BotUtils:
                     return
                 BOT_CACHE_DB.set_cache(key=id, value=video, type=BotCacheDb.TYPE_FV)
             self.send_msg(
-                f"""MissAv 视频地址: {BASE_URL_MISS_AV}/{id}
+                f"""MissAv Video URL: {BASE_URL_MISS_AV}/{id}
 
 Avgle 视频地址: {video}
 """
@@ -921,19 +922,19 @@ Avgle 视频地址: {video}
         markup = InlineKeyboardMarkup()
         markup.row(
             InlineKeyboardButton(
-                text="随机 av",
+                text="Random AV",
                 callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RANDOM_GET_AV_BY_STAR_ID}",
             ),
             InlineKeyboardButton(
-                text="最新 av",
+                text="Latest AV",
                 callback_data=f"{star_name}|{star_id}:{BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID}",
             ),
             InlineKeyboardButton(
-                text=f"高分 av",
+                text=f"Most Rated AV",
                 callback_data=f"{star_name}:{BotKey.KEY_GET_NICE_AVS_BY_STAR_NAME}",
             ),
             InlineKeyboardButton(
-                text=f"收藏 {star_name}",
+                text=f"Record {star_name}",
                 callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID}",
             ),
         )
