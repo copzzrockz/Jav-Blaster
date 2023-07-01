@@ -1227,41 +1227,41 @@ def handle_callback(call):
         bot_utils.get_av_by_id(id=content)
 
 def handle_message(message):
-    """Handle message
+    """处理消息
 
-    :param message: Message object
+    :param _type_ message
     """
-    # Echo typing...
+    # 回显 typing...
     bot_utils = BotUtils()
     bot_utils.send_action_typing()
-    # Intercept requests
+    # 拦截请求
     chat_id = str(message.chat.id)
     if chat_id.lower() != BOT_CFG.tg_chat_id.lower():
-        LOG.info(f"Intercepted request from non-target user, id: {chat_id}")
+        LOG.info(f"拦截到非目标用户请求, id: {chat_id}")
         BOT.send_message(
             chat_id=chat_id,
-            text=f'This bot is for private use only. If you want to use it, please deploy it yourself: <a href="{PROJECT_ADDRESS}">Project Address</a>',
+            text=f'该机器人仅供私人使用, 如需使用请自行部署: <a href="{PROJECT_ADDRESS}">项目地址</a>',
             parse_mode="HTML",
         )
         return
     bot_utils = BotUtils()
-    # Get message text content
+    # 获取消息文本内容
     if message.content_type != "text":
         msg = message.caption
     else:
         msg = message.text
     if not msg:
         return
-    LOG.info(f'Received message: "{msg}"')
+    LOG.info(f'收到消息: "{msg}"')
     msg = msg.lower().strip()
-    msgs = msg.split(" ", 1)  # Split into two parts
-    # Message command
+    msgs = msg.split(" ", 1)  # 划分为两部分
+    # 消息命令
     msg_cmd = msgs[0]
-    # Message parameter
+    # 消息参数
     msg_param = ""
-    if len(msgs) > 1:  # Has parameter
+    if len(msgs) > 1:  # 有参数
         msg_param = msgs[1].strip()
-    # Handle message
+    # 处理消息
     if msg_cmd == "/help" or msg_cmd == "/start":
         bot_utils.send_msg(MSG_HELP)
     elif msg_cmd == "/nice":
@@ -1271,7 +1271,7 @@ def handle_message(message):
             code, ids = JAVLIB_UTIL.get_random_ids_from_rank_by_page(
                 page=page, list_type=0
             )
-            if bot_utils.check_success(code, "Get random high-rated av"):
+            if bot_utils.check_success(code, "随机获取高分 av"):
                 BOT_CACHE_DB.set_cache(
                     key=page,
                     value=ids,
@@ -1287,7 +1287,7 @@ def handle_message(message):
             code, ids = JAVLIB_UTIL.get_random_ids_from_rank_by_page(
                 page=page, list_type=1
             )
-            if bot_utils.check_success(code, "Get random latest av"):
+            if bot_utils.check_success(code, "随机获取最新 av"):
                 BOT_CACHE_DB.set_cache(
                     key=page,
                     value=ids,
@@ -1306,34 +1306,33 @@ def handle_message(message):
                 chat_id=BOT_CFG.tg_chat_id, document=types.InputFile(PATH_RECORD_FILE)
             )
         else:
-            bot_utils.send_msg_fail_reason_op(reason="No collection record yet", op="Get collection record file")
+            bot_utils.send_msg_fail_reason_op(reason="尚无收藏记录", op="获取收藏记录文件")
     elif msg_cmd == "/rank":
         bot_utils.get_top_stars(1)
     elif msg_cmd == "/star":
         if msg_param != "":
-            bot_utils.send_msg(f"Searching for actor: <code>{msg_param}</code> ......")
+            bot_utils.send_msg(f"搜索演员: <code>{msg_param}</code> ......")
             bot_utils.search_star_by_name(msg_param)
     elif msg_cmd == "/av":
         if msg_param:
-            bot_utils.send_msg(f"Searching for code: <code>{msg_param}</code> ......")
+            bot_utils.send_msg(f"搜索番号: <code>{msg_param}</code> ......")
             bot_utils.get_av_by_id(id=msg_param, send_to_pikpak=True)
     else:
         ids = AV_PAT.findall(msg)
         if not ids or len(ids) == 0:
             bot_utils.send_msg(
-                "The message does not seem to contain valid codes. You can try searching by using '/av code'. Use the '/help' command for assistance ~"
+                "消息似乎不存在符合规则的番号, 可尝试通过“<code>/av</code> 番号”进行查找, 通过 /help 命令可获得帮助 ~"
             )
         else:
             ids = [id.lower() for id in ids]
             ids = set(ids)
             ids_msg = ", ".join(ids)
-            bot_utils.send_msg(f"Detected codes: {ids_msg}, searching......")
+            bot_utils.send_msg(f"检测到番号: {ids_msg}, 开始搜索......")
             for i, id in enumerate(ids):
                 threading.Thread(target=bot_utils.get_av_by_id, args=(id,)).start()
 
 
 EXECUTOR = concurrent.futures.ThreadPoolExecutor()
-
 
 @BOT.callback_query_handler(func=lambda call: True)
 def my_callback_handler(call):
