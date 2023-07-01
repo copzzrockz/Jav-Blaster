@@ -39,7 +39,7 @@ PATH_RECORD_FILE = f"{PATH_ROOT}/record.json"
 # my_account.session 文件位置
 PATH_SESSION_FILE = f"{PATH_ROOT}/my_account"
 # 配置文件位置
-PATH_CONFIG_FILE = f"{PATH_ROOT}/config.yaml"
+PATH_CONFIG_FILE = f"config.yaml"
 # 正则匹配 AV
 AV_PAT = re.compile(r"[a-z0-9]+[-_](?:ppv-)?[a-z0-9]+")
 # 帮助消息
