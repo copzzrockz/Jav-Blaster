@@ -587,23 +587,23 @@ class BotUtils:
         # 标题
         if av_title != "":
             av_title_ch = TRANS_UTIL.trans(
-                text=av_title, from_lang="ja", to_lang="zh-CN"
+                text=av_title, from_lang="ja", to_lang="en"
             )
             if av_title_ch:
                 av_title = av_title_ch
             av_title = av_title.replace("<", "").replace(">", "")
-            msg += f"""Title: `{av_title}`
+            msg += f"""Title: <code>{av_title}</code>
 """
         # 番号
         msg += f"""Product ID: <code>{av_id}</code>
 """
         # 日期
         if av_date != "":
-            msg += f"""Release Date: `{av_date}`
+            msg += f"""Release Date: <code>{av_date}</code>
 """
         # 评分
         if av_score:
-            msg += f"""Ratings: `{av_score}/5`
+            msg += f"""Ratings: <code>{av_score}/5</code>
 """
         # 演员
         if av_stars != []:
@@ -669,12 +669,13 @@ class BotUtils:
                 magnet_send_to_pikpak = magnet["link"]
             magnet_tags = ""
             if magnet["uc"] == "1":
-                magnet_tags += "UNCENSORED"
+                magnet_tags += " UNCENSORED "
             if magnet["hd"] == "1":
-                magnet_tags += "HD"
+                magnet_tags += " HD "
             if magnet["zm"] == "1":
-                magnet_tags += "JAP SUB"
-            msg_tmp = f"""Download Links: [{magnet_tags} ~ {string.ascii_letters[i].upper()} {magnet["size"]}] <code>{magnet["link"]}</code>"""
+                magnet_tags += " JAP SUB "
+            msg_tmp = f"""Magnet Links: [{magnet_tags} {magnet["size"]}] <code>{magnet["link"]}</code>
+"""
             if len(msg + msg_tmp) >= 2000:
                 break
             msg += msg_tmp
