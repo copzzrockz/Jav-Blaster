@@ -1344,30 +1344,30 @@ def my_callback_handler(call):
 
 @BOT.message_handler(content_types=["text", "photo", "animation", "video", "document"])
 def my_message_handler(message):
-    """Message handler
+    """消息处理器
 
-    :param message: Message object
+    :param _type_ message: 消息
     """
     EXECUTOR.submit(handle_message, message)
 
 
 def pyrogram_auth():
     if BOT_CFG.use_pikpak == "1" and not os.path.exists(f"{PATH_SESSION_FILE}.session"):
-        LOG.info(f"Performing pyrogram authentication......")
+        LOG.info(f"进行 pyrogram 登录认证......")
         try:
-            BotUtils().send_msg_to_pikpak("Pyrogram authentication")
-            LOG.info(f"Pyrogram authentication successful")
+            BotUtils().send_msg_to_pikpak("pyrogram 登录认证")
+            LOG.info(f"pyrogram 登录认证成功")
         except BaseException as e:
-            LOG.error(f"Pyrogram authentication failed: {e}")
+            LOG.error(f"pyrogram 登录认证失败: {e}")
 
 
 def main():
     pyrogram_auth()
     try:
         bot_info = BOT.get_me()
-        LOG.info(f"Connected to bot: @{bot_info.username} (ID: {bot_info.id})")
+        LOG.info(f"连接到机器人: @{bot_info.username} (ID: {bot_info.id})")
     except Exception as e:
-        LOG.error(f"Unable to connect to bot: {e}")
+        LOG.error(f"无法连接到机器人: {e}")
         return
     BOT.set_my_commands([types.BotCommand(cmd, BOT_CMDS[cmd]) for cmd in BOT_CMDS])
     BOT.infinity_polling()
