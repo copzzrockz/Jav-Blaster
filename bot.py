@@ -601,7 +601,7 @@ class BotUtils:
             msg += f"""Release Date: <code>{av_date}</code>
 """
         # 评分
-        if av_score != "":
+        if av_score:
             msg += f"""Ratings: <code>{av_score}/5</code>
 """
         # 演员
