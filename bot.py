@@ -514,7 +514,7 @@ class BotUtils:
         # 获取 av
         op_get_av_by_id = f"Search ID <code>{id}</code>"
         av = BOT_CACHE_DB.get_cache(key=id, type=BotCacheDb.TYPE_AV)
-        av_score = NONE
+        av_score = None
         is_cache = False
         futures = {}
         if not av or not_send:
