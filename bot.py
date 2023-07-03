@@ -886,12 +886,7 @@ class BotUtils:
                     return
                 BOT_CACHE_DB.set_cache(key=id, value=video, type=BotCacheDb.TYPE_FV)
             self.send_msg(
-                f"""<code> {id} | {title}</code>
-
-
-                JavBus URL: {url}
-                
-                MissAv Video URL: {BASE_URL_MISS_AV}/{id}
+                f"""MissAv Video URL: {BASE_URL_MISS_AV}/{id}
 
 Avgle Video URL: {video}
 """
