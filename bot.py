@@ -18,7 +18,10 @@ from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMedia
 from logger import Logger
 from config import BotConfig
 from database import BotFileDb, BotCacheDb
+from flask import Flask, request
 
+# Initialize Flask app
+app = Flask(__name__)
 
 # TG 地址
 BASE_URL_TG = "https://t.me"
@@ -1360,6 +1363,10 @@ def pyrogram_auth():
             LOG.error(f"pyrogram login authentication failed: {e}")
 
 
+@app.route('/')
+def hello():
+    return "Hello, I'm the Telegram bot!"
+
 def main():
     pyrogram_auth()
     try:
@@ -1368,9 +1375,13 @@ def main():
     except Exception as e:
         LOG.error(f"Can't connect to robot: {e}")
         return
-    BOT.set_my_commands([types.BotCommand(cmd, BOT_CMDS[cmd]) for cmd in BOT_CMDS])
-    BOT.infinity_polling()
 
+    BOT.set_my_commands([types.BotCommand(cmd, BOT_CMDS[cmd]) for cmd in BOT_CMDS])
+
+    # Start the Flask app in a separate thread
+    threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 5000}).start()
+
+    BOT.infinity_polling()
 
 if __name__ == "__main__":
     main()
