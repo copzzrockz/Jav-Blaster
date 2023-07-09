@@ -885,7 +885,7 @@ class BotUtils:
             if not video:
                 code, video = AVGLE_UTIL.get_fv_by_id(id)
                 if code != 200:
-                    self.send_msg(f"<code>{id} | {title}</code>\n\nMissAv Video URL: {BASE_URL_MISS_AV}/{id}")
+                    self.send_msg(f"MissAv Video URL: {BASE_URL_MISS_AV}/{id}")
                     return
                 BOT_CACHE_DB.set_cache(key=id, value=video, type=BotCacheDb.TYPE_FV)
             self.send_msg(
@@ -1365,7 +1365,7 @@ def pyrogram_auth():
 
 @app.route('/')
 def hello():
-    return "Hello, I'm the Telegram bot!"
+    return "JAV BLASTER BOT is Alive!"
 
 def main():
     pyrogram_auth()
