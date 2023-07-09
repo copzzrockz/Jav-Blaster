@@ -1379,7 +1379,7 @@ def main():
     BOT.set_my_commands([types.BotCommand(cmd, BOT_CMDS[cmd]) for cmd in BOT_CMDS])
 
     # Start the Flask app in a separate thread
-    threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 5000}).start()
+    threading.Thread(target=app.run, kwargs={'host': '0.0.0.0', 'port': 8080}).start()
 
     BOT.infinity_polling()
 
