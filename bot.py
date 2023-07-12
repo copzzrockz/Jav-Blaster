@@ -646,18 +646,11 @@ class BotUtils:
                         if wiki_json and wiki_json["lang"] == "zh":
                             name_zh = wiki_json["title"]
                             wiki_zh = wiki_json["url"]
-                            if name_zh != "":
-                                name_en = TRANS_UTIL.trans(text=name_zh, from_lang="zh", to_lang="en")
-                                if name_en:
-                                    stars_msg += f"""Actor: <code>{name_en}</code>
+                            stars_msg += f"""Actor: <code>{name_zh}</code>
 """
-                                else:
-                                    stars_msg += f"""Actor: <code>{name_zh}</code>
+                        else:
+                            stars_msg += f"""Actor: <code>{name}</code>
 """
-                            else:
-                                stars_msg += f"""Actor: <code>{name}</code>
-"""
-
                 if more_star_msg != "":
                     stars_msg += more_star_msg
                 BOT_CACHE_DB.set_cache(
