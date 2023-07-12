@@ -581,7 +581,11 @@ class BotUtils:
         av_img = av["img"]
         av_date = av["date"]
         av_tags = av["tags"]
-        av_stars = av["stars"]
+        av_stars_en = []
+        for star in av["stars"]:
+            star_en = TRANS_UTIL.trans(text=star, from_lang="zh", to_lang="en")
+            av_stars_en.append(star_en if star_en else star)
+
         av_magnets = av["magnets"]
         av_url = av["url"]
         # 拼接消息
