@@ -576,7 +576,7 @@ class BotUtils:
         if not_send:
             return av
         # 提取数据
-        av_id = id
+        av_id = id.upper()
         av_title = av["title"]
         av_img = av["img"]
         av_date = av["date"]
