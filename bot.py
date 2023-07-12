@@ -581,11 +581,7 @@ class BotUtils:
         av_img = av["img"]
         av_date = av["date"]
         av_tags = av["tags"]
-        av_stars_en = []
-        for star in av["stars"]:
-            star_en = TRANS_UTIL.trans(text=star, from_lang="zh", to_lang="en")
-            av_stars_en.append(star_en if star_en else star)
-
+        av_stars = av["stars"]
         av_magnets = av["magnets"]
         av_url = av["url"]
         # 拼接消息
@@ -650,11 +646,14 @@ class BotUtils:
                         if wiki_json and wiki_json["lang"] == "zh":
                             name_zh = wiki_json["title"]
                             wiki_zh = wiki_json["url"]
-                            stars_msg += f"""Actor: <code>{name_zh}</code>
-"""
-                        else:
-                            stars_msg += f"""Actor: <code>{name}</code>
-"""
+                            stars_msg = ""
+
+                            if name_zh:
+                                translated_name_zh = TRANS_UTIL.trans(text=name_zh, from_lang="zh", to_lang="en")
+                                stars_msg += f"Actor: <code>{translated_name_zh}</code>\n"
+                            else:
+                                translated_name = TRANS_UTIL.trans(text=name, from_lang="en", to_lang="en")
+                                stars_msg += f"Actor: <code>{translated_name}</code>\n"
                 if more_star_msg != "":
                     stars_msg += more_star_msg
                 BOT_CACHE_DB.set_cache(
