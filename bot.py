@@ -19,6 +19,7 @@ from logger import Logger
 from config import BotConfig
 from database import BotFileDb, BotCacheDb
 from flask import Flask, request
+from jvav import TransUtil
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -643,8 +644,10 @@ class BotUtils:
                         wiki = f"{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{name}"
                         name = av_stars[future_type]["name"]
                         link = f'{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_ID}/{av_stars[future_type]["id"]}'
-                        if wiki_json and wiki_json["lang"] == "en":
-                            name_zh = wiki_json["title"]
+                        if wiki_json and wiki_json["lang"] == "zh":
+                            name_z = wiki_json["title"]
+                            trans_util = TransUtil()
+                            name_zh = trans_util.trans(text=name_z, to_lang="en")
                             wiki_zh = wiki_json["url"]
                             stars_msg += f"""Actor: <code>{name_zh}</code>
 """
