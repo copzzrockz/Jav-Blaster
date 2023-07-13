@@ -18,7 +18,7 @@ from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup, InputMedia
 from logger import Logger
 from config import BotConfig
 from database import BotFileDb, BotCacheDb
-
+from jvav import TransUtil
 
 # TG 地址
 BASE_URL_TG = "https://t.me"
