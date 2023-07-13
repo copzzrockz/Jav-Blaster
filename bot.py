@@ -643,7 +643,7 @@ class BotUtils:
                         wiki = f"{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{name}"
                         name = av_stars[future_type]["name"]
                         link = f'{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_ID}/{av_stars[future_type]["id"]}'
-                        if wiki_json and wiki_json["lang"] == "zh":
+                        if wiki_json and wiki_json["lang"] == "en":
                             name_zh = wiki_json["title"]
                             wiki_zh = wiki_json["url"]
                             stars_msg += f"""Actor: <code>{name_zh}</code>
