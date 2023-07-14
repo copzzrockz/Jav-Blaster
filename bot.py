@@ -667,6 +667,9 @@ class BotUtils:
         # 标签
         if av_tags != "":
             av_tags = av_tags.replace("<", "").replace(">", "")
+            av_tags = av_tags.split()
+            av_tags = [tag.replace(' ', '') for tag in av_tags]
+            av_tags = ' '.join(av_tags)
             msg += f"""Tags: {av_tags}
 """
         # 其它
