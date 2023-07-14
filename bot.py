@@ -154,23 +154,23 @@ class BotUtils:
         """
         if code == 200:
             self.send_msg(
-                f"""执行操作: {op}
-执行结果: 成功 ^_^"""
+                f"""{op}
+Success ^_^"""
             )
         elif code == 404:
             self.send_msg(
-                f"""执行操作: {op}
-执行结果: 未查找到结果 Q_Q"""
+                f"""{op}
+Try Again...! ^_^"""
             )
         elif code == 500:
             self.send_msg(
-                f"""执行操作: {op}
-执行结果: 服务器出错, 请重试或检查日志 Q_Q"""
+                f"""{op}
+Server Error, please try again or check the log -_-"""
             )
         elif code == 502:
             self.send_msg(
-                f"""执行操作: {op}
-执行结果: 网络请求失败, 请重试或检查网络 Q_Q"""
+                f"""{op}
+The network request failed, please try again or check the network -_-"""
             )
 
     def send_msg_success_op(self, op: str):
@@ -179,8 +179,8 @@ class BotUtils:
         :param str op: 执行的操作描述
         """
         self.send_msg(
-            f"""执行操作: {op}
-执行结果: 成功 ^_^"""
+            f"""{op}
+Success! ^_^"""
         )
 
     def send_msg_fail_reason_op(self, reason: str, op: str):
@@ -190,8 +190,8 @@ class BotUtils:
         :param str op: 执行的操作描述
         """
         self.send_msg(
-            f"""执行操作: {op}
-执行结果: 失败, {reason} Q_Q"""
+            f"""{{op}
+Failed! {reason} -_-"""
         )
 
     def check_success(self, code: int, op: str) -> bool:
@@ -1249,7 +1249,7 @@ def handle_message(message):
         LOG.info(f"拦截到非目标用户请求, id: {chat_id}")
         BOT.send_message(
             chat_id=chat_id,
-            text=f'This robot is for private use only, if you want to use it, please deploy it yourself: <a href="{PROJECT_ADDRESS}">Project</a>',
+            text=f'Sorry you cannot use the Bot! The Bot is Programmed only for Admin's Prior',
             parse_mode="HTML",
         )
         return
