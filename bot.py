@@ -190,7 +190,7 @@ Success! ^_^"""
         :param str op: 执行的操作描述
         """
         self.send_msg(
-            f"""{{op}
+            f"""{op}
 Failed! {reason} -_-"""
         )
 
