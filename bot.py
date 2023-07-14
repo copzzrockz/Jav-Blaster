@@ -581,7 +581,9 @@ class BotUtils:
         av_title = av["title"]
         av_img = av["img"]
         av_date = av["date"]
-        av_tags = av["tags"]
+        av_tag = av["tags"]
+        trans_util = TransUtil()
+        av_tags = trans_util.trans(text=av_tag, from_lang="ja", to_lang="en")
         av_stars = av["stars"]
         av_magnets = av["magnets"]
         av_url = av["url"]
