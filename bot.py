@@ -600,15 +600,15 @@ class BotUtils:
             msg += f"""<code>{av_id}</code> | {av_title}
 """
         # 番号
-        msg += f"""Product ID: <code>{av_id}</code>
+        msg += f"""𝗣𝗿𝗼𝗱𝘂𝗰𝘁 𝗜𝗗: <code>{av_id}</code>
 """
         # 日期
         if av_date != "":
-            msg += f"""Release Date: <code>{av_date}</code>
+            msg += f"""𝗥𝗲𝗹𝗲𝗮𝘀𝗲 𝗗𝗮𝘁𝗲: <code>{av_date}</code>
 """
         # 评分
         if av_score:
-            msg += f"""Ratings: <code>{av_score}/5</code>
+            msg += f"""𝗥𝗮𝘁𝗶𝗻𝗴𝘀: <code>{av_score}/5</code>
 """
         # 演员
         if av_stars != []:
@@ -663,13 +663,13 @@ class BotUtils:
                 BOT_CACHE_DB.set_cache(
                     key=av_id, value=stars_msg, type=BotCacheDb.TYPE_STARS_MSG
                 )
-            msg += "Actor: " + stars_msg
+            msg += "𝗔𝗰𝘁𝗼𝗿: " + stars_msg
         # 标签
         if av_tags != "":
             av_tags = av_tags.replace("<", "").replace(">", "")
             av_tags = av_tags.replace(" ", "")
             av_tags = av_tags.replace("#", " #")
-            msg += f"""Tags:{av_tags}
+            msg += f"""𝗚𝗲𝗻𝗿𝗲𝘀:{av_tags}
 """
         # 其它
         #msg += f"""Others: <a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>"""
