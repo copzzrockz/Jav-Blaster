@@ -689,7 +689,7 @@ class BotUtils:
 """
             if len(msg + msg_tmp) >= 2000:
                 break
-            msg += msg_tmp
+            #msg += msg_tmp
         # 生成回调按钮
         # 第一排按钮
         pv_btn = InlineKeyboardButton(
@@ -1025,11 +1025,11 @@ Avgle Video URL: {video}
         for magnet in magnets:
             magnet_tags = ""
             if magnet["uc"] == "1":
-                magnet_tags += "无码"
+                magnet_tags += " UNCENSORED"
             if magnet["hd"] == "1":
-                magnet_tags += "高清"
+                magnet_tags += " HD "
             if magnet["zm"] == "1":
-                magnet_tags += "含字幕"
+                magnet_tags += " SUB "
             star_tag = ""
             if magnet["hd"] == "1" and magnet["zm"] == "1":
                 star_tag = "*"
