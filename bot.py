@@ -597,7 +597,7 @@ class BotUtils:
             if av_title_ch:
                 av_title = av_title_ch
             av_title = av_title.replace("<", "").replace(">", "")
-            msg += f"""Title: <i><a href="{av_url}">{av_title}</a></i>
+            msg += f"""<code>{av_id}</code> | <b>{av_title}</b>
 """
         # 番号
         msg += f"""Product ID: <code>{av_id}</code>
@@ -667,9 +667,7 @@ class BotUtils:
         # 标签
         if av_tags != "":
             av_tags = av_tags.replace("<", "").replace(">", "")
-            av_tags = av_tags.split()
-            av_tags = [tag.replace(' ', '') for tag in av_tags]
-            av_tags = ' '.join(av_tags)
+            av_tags = av_tags.replace(" ", "")
             msg += f"""Tags: {av_tags}
 """
         # 其它
