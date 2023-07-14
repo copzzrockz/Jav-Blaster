@@ -642,7 +642,9 @@ class BotUtils:
                         future_type = futures[future]
                         wiki_json = future.result()
                         wiki = f"{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{name}"
-                        name = av_stars[future_type]["name"]
+                        nam = av_stars[future_type]["name"]
+                        trans_util = TransUtil()
+                        name = trans_util.trans(text=nam, to_lang="en")
                         link = f'{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_ID}/{av_stars[future_type]["id"]}'
                         if wiki_json and wiki_json["lang"] == "zh":
                             name_z = wiki_json["title"]
