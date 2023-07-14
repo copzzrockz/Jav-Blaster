@@ -625,7 +625,7 @@ class BotUtils:
                     for i, star in enumerate(av_stars):
                         # 如果个数大于 5 则退出
                         if i >= 5:
-                            more_star_msg = f"""【演员】<a href="{av_url}">查看更多......</a>
+                            more_star_msg = f"""<a href="{av_url}">See More [Actors].....</a>
 """
                             break
                         # 获取搜索名
@@ -1025,15 +1025,15 @@ Avgle Video URL: {video}
         for magnet in magnets:
             magnet_tags = ""
             if magnet["uc"] == "1":
-                magnet_tags += " UNCENSORED"
+                magnet_tags += " UNCENSORED "
             if magnet["hd"] == "1":
-                magnet_tags += " HD "
+                magnet_tags += "HD"
             if magnet["zm"] == "1":
-                magnet_tags += " SUB "
+                magnet_tags += " SUBTITLES "
             star_tag = ""
             if magnet["hd"] == "1" and magnet["zm"] == "1":
                 star_tag = "*"
-            msg_tmp = f"""【{star_tag}{magnet_tags}磁链 {magnet["size"]}】<code>{magnet["link"]}</code>
+            msg_tmp = f"""【{star_tag}{magnet_tags}🧲 {magnet["size"]}】<code>{magnet["link"]}</code>
 """
             if len(msg + msg_tmp) >= 4000:
                 self.send_msg(msg)
