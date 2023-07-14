@@ -597,7 +597,7 @@ class BotUtils:
             if av_title_ch:
                 av_title = av_title_ch
             av_title = av_title.replace("<", "").replace(">", "")
-            msg += f"""<code>{av_id}</code> | <b>{av_title}</b>
+            msg += f"""<code>{av_id}</code> | {av_title}
 """
         # 番号
         msg += f"""Product ID: <code>{av_id}</code>
@@ -668,7 +668,8 @@ class BotUtils:
         if av_tags != "":
             av_tags = av_tags.replace("<", "").replace(">", "")
             av_tags = av_tags.replace(" ", "")
-            msg += f"""Tags: {av_tags}
+            av_tags = av_tags.replace("#", " #")
+            msg += f"""Tags:{av_tags}
 """
         # 其它
         #msg += f"""Others: <a href="{BASE_URL_TG}/{PIKPAK_BOT_NAME}">Pikpak</a> | <a href="{PROJECT_ADDRESS}">项目</a> | <a href="{CONTACT_AUTHOR}">作者</a>"""
