@@ -1249,7 +1249,7 @@ def handle_message(message):
         LOG.info(f"拦截到非目标用户请求, id: {chat_id}")
         BOT.send_message(
             chat_id=chat_id,
-            text=f'Sorry you cannot use the Bot! The Bot is Programmed only for Admin's Prior',
+            text=f"<b>Jᴀᴠ Bʟᴀsᴛᴇʀ is a Private Robot! The Bot is Programmed only for Admin's Prior.</b>",
             parse_mode="HTML",
         )
         return
