@@ -649,6 +649,7 @@ Failed! {reason} -_-"""
                         intro_phrase = "My name is"
                         name = f"{intro_phrase} {nam}"
                         name = trans_util.trans(text=name, from_lang="ja", to_lang="en")
+                        name = name.replace(intro_phrase, "")
                         link = f'{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_ID}/{av_stars[future_type]["id"]}'
                         if wiki_json and wiki_json["lang"] == "zh":
                             name_z = wiki_json["title"]
@@ -656,6 +657,7 @@ Failed! {reason} -_-"""
                             intro_phrase = "My name is"
                             name_zh = f"{intro_phrase} {nam}"
                             name_zh = trans_util.trans(text=name_zh, from_lang="ja", to_lang="en")
+                            name_zh = name.replace(intro_phrase, "")
                             wiki_zh = wiki_json["url"]
                             stars_msg += f"""<code>{name_zh}</code>
 """
