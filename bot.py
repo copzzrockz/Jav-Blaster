@@ -583,10 +583,7 @@ Failed! {reason} -_-"""
         av_date = av["date"]
         av_tag = av["tags"]
         trans_util = TransUtil()
-        intro_phrase = "The Categories are "
-        av_tags = f"{intro_phrase}{av_tag}"
         av_tags = trans_util.trans(text=av_tag, from_lang="ja", to_lang="en")
-        av_tags = name.replace(intro_phrase, "")
         av_stars = av["stars"]
         av_magnets = av["magnets"]
         av_url = av["url"]
