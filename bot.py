@@ -646,12 +646,16 @@ Failed! {reason} -_-"""
                         wiki = f"{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{name}"
                         nam = av_stars[future_type]["name"]
                         trans_util = TransUtil()
-                        name = trans_util.trans(text=nam, from_lang="ja", to_lang="en")
+                        intro_phrase = "My name is"
+                        name = f"{intro_phrase} {nam}"
+                        name = trans_util.trans(text=name, from_lang="ja", to_lang="en")
                         link = f'{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_ID}/{av_stars[future_type]["id"]}'
                         if wiki_json and wiki_json["lang"] == "zh":
                             name_z = wiki_json["title"]
                             trans_util = TransUtil()
-                            name_zh = trans_util.trans(text=name_z, from_lang="ja", to_lang="en")
+                            intro_phrase = "My name is"
+                            name_zh = f"{intro_phrase} {nam}"
+                            name_zh = trans_util.trans(text=name_zh, from_lang="ja", to_lang="en")
                             wiki_zh = wiki_json["url"]
                             stars_msg += f"""<code>{name_zh}</code>
 """
