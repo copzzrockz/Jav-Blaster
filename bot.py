@@ -583,7 +583,10 @@ Failed! {reason} -_-"""
         av_date = av["date"]
         av_tag = av["tags"]
         trans_util = TransUtil()
+        intro_phrase = "The Categories are "
+        av_tags = f"{intro_phrase}{av_tag}"
         av_tags = trans_util.trans(text=av_tag, from_lang="ja", to_lang="en")
+        av_tags = name.replace(intro_phrase, "")
         av_stars = av["stars"]
         av_magnets = av["magnets"]
         av_url = av["url"]
@@ -646,15 +649,15 @@ Failed! {reason} -_-"""
                         wiki = f"{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{name}"
                         nam = av_stars[future_type]["name"]
                         trans_util = TransUtil()
-                        intro_phrase = "My name is"
-                        name = f"{intro_phrase} {nam}"
+                        intro_phrase = "My name is "
+                        name = f"{intro_phrase}{nam}"
                         name = trans_util.trans(text=name, from_lang="ja", to_lang="en")
                         name = name.replace(intro_phrase, "")
                         link = f'{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_ID}/{av_stars[future_type]["id"]}'
                         if wiki_json and wiki_json["lang"] == "zh":
                             name_z = wiki_json["title"]
                             trans_util = TransUtil()
-                            intro_phrase = "My name is"
+                            intro_phrase = "My name is "
                             name_zh = f"{intro_phrase}{nam}"
                             name_zh = trans_util.trans(text=name_zh, from_lang="ja", to_lang="en")
                             name_zh = name.replace(intro_phrase, "")
