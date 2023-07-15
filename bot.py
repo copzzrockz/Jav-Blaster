@@ -655,7 +655,7 @@ Failed! {reason} -_-"""
                             name_z = wiki_json["title"]
                             trans_util = TransUtil()
                             intro_phrase = "My name is"
-                            name_zh = f"{intro_phrase} {nam}"
+                            name_zh = f"{intro_phrase}{nam}"
                             name_zh = trans_util.trans(text=name_zh, from_lang="ja", to_lang="en")
                             name_zh = name.replace(intro_phrase, "")
                             wiki_zh = wiki_json["url"]
