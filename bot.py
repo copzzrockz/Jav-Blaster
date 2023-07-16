@@ -612,12 +612,7 @@ Failed! {reason} -_-"""
 """
         # 演员
         if av_stars != []:
-            show_star_nam = av_stars[0]["name"]
-            trans_util = TransUtil()
-            intro_phrase = "My name is "
-            show_star_name = f"{intro_phrase}{show_star_nam}"
-            show_star_name = trans_util.trans(text=show_star_name, from_lang="ja", to_lang="en")
-            show_star_name = name.replace(intro_phrase, "")
+            show_star_name = av_stars[0]["name"]
             show_star_id = av_stars[0]["id"]
             stars_msg = BOT_CACHE_DB.get_cache(
                 key=av_id, type=BotCacheDb.TYPE_STARS_MSG
