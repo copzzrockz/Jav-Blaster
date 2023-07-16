@@ -931,12 +931,7 @@ Avgle Video URL: {video}
                     type=BotCacheDb.TYPE_STAR,
                 )
         star_id = star["star_id"]
-        star_nam = star["star_name"]
-        trans_util = TransUtil()
-        intro_phrase = "My name is "
-        star_name = f"{intro_phrase}{star_nam}"
-        star_name = trans_util.trans(text=star_name, from_lang="ja", to_lang="en")
-        star_name = name.replace(intro_phrase, "")
+        star_name = star["star_name"]
         if BOT_DB.check_star_exists_by_id(star_id=star_id):
             self.get_star_detail_record_by_name_id(star_name=star_name, star_id=star_id)
             return True
@@ -944,26 +939,26 @@ Avgle Video URL: {video}
         markup.row(
             InlineKeyboardButton(
                 text="Random AV",
-                callback_data=f"{star_nam}|{star_id}:{BotKey.KEY_RANDOM_GET_AV_BY_STAR_ID}",
+                callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RANDOM_GET_AV_BY_STAR_ID}",
             ),
             InlineKeyboardButton(
                 text="Latest AV",
-                callback_data=f"{star_nam}|{star_id}:{BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID}",
+                callback_data=f"{star_name}|{star_id}:{BotKey.KEY_GET_NEW_AVS_BY_STAR_NAME_ID}",
             ),
             InlineKeyboardButton(
                 text=f"Most Rated AV",
-                callback_data=f"{star_nam}:{BotKey.KEY_GET_NICE_AVS_BY_STAR_NAME}",
+                callback_data=f"{star_name}:{BotKey.KEY_GET_NICE_AVS_BY_STAR_NAME}",
             ),
             InlineKeyboardButton(
                 text=f"Record {star_name}",
-                callback_data=f"{star_nam}|{star_id}:{BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID}",
+                callback_data=f"{star_name}|{star_id}:{BotKey.KEY_RECORD_STAR_BY_STAR_NAME_ID}",
             ),
         )
-        star_wiki = f"{WIKI_UTIL.BASE_URL_CHINA_WIKI}/{star_nam}"
-        if langdetect.detect(star_nam) == "ja":
-            star_wiki = f"{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{star_nam}"
+        star_wiki = f"{WIKI_UTIL.BASE_URL_CHINA_WIKI}/{star_name}"
+        if langdetect.detect(star_name) == "ja":
+            star_wiki = f"{WIKI_UTIL.BASE_URL_JAPAN_WIKI}/{star_name}"
         self.send_msg(
-            msg=f'<code>{star_name}</code> | <a href="{star_wiki}">Wiki</a> | <a href="{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_NAME}/{star_nam}">Javbus</a>',
+            msg=f'<code>{star_name}</code> | <a href="{star_wiki}">Wiki</a> | <a href="{JAVBUS_UTIL.BASE_URL_SEARCH_BY_STAR_NAME}/{star_name}">Javbus</a>',
             markup=markup,
         )
         return True
@@ -1069,7 +1064,7 @@ Avgle Video URL: {video}
             BOT_CACHE_DB.set_cache(
                 key=star_id, value=ids, type=BotCacheDb.TYPE_NEW_AVS_OF_STAR
             )
-        title = f"<code>{star_name}</code> 最新 av"
+        title = f"<code>{star_name}</code> Latest AV"
         btns = [
             InlineKeyboardButton(
                 text=id, callback_data=f"{id}:{BotKey.KEY_GET_AV_BY_ID}"
