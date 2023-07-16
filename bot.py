@@ -367,7 +367,7 @@ Failed! {reason} -_-"""
             max_btn_per_row=col,
             max_row_per_msg=row,
             key_type=BotKey.KEY_GET_STAR_DETAIL_RECORD_BY_STAR_NAME_ID,
-            title="<b>收藏的演员: </b>" + title,
+            title="<b>Favorites: </b>" + title,
             objs=objs,
             page_btns=page_btns,
         )
@@ -381,7 +381,7 @@ Failed! {reason} -_-"""
         # 初始化数据
         record, is_stars_exists, is_avs_exists = BOT_DB.check_has_record()
         if not record:
-            self.send_msg(reason="尚无该演员收藏记录", op=f"获取演员 <code>{star_name}</code> 的更多信息")
+            self.send_msg(reason="There is no record of the actor collection", op=f"Actor <code>{star_name}</code>More information")
             return
         avs = []
         star_avs = []
@@ -612,7 +612,12 @@ Failed! {reason} -_-"""
 """
         # 演员
         if av_stars != []:
-            show_star_name = av_stars[0]["name"]
+            show_star_nam = av_stars[0]["name"]
+            trans_util = TransUtil()
+            intro_phrase = "My name is "
+            show_star_name = f"{intro_phrase}{show_star_nam}"
+            show_star_name = trans_util.trans(text=show_star_name, from_lang="ja", to_lang="en")
+            show_star_name = name.replace(intro_phrase, "")
             show_star_id = av_stars[0]["id"]
             stars_msg = BOT_CACHE_DB.get_cache(
                 key=av_id, type=BotCacheDb.TYPE_STARS_MSG
@@ -935,7 +940,7 @@ Avgle Video URL: {video}
         trans_util = TransUtil()
         intro_phrase = "My name is "
         star_name = f"{intro_phrase}{star_nam}"
-        star_name = trans_util.trans(text=star_nam, from_lang="ja", to_lang="en")
+        star_name = trans_util.trans(text=star_name, from_lang="ja", to_lang="en")
         star_name = name.replace(intro_phrase, "")
         if BOT_DB.check_star_exists_by_id(star_id=star_id):
             self.get_star_detail_record_by_name_id(star_name=star_name, star_id=star_id)
@@ -991,7 +996,7 @@ Avgle Video URL: {video}
             max_btn_per_row=col,
             max_row_per_msg=row,
             key_type=BotKey.KEY_SEARCH_STAR_BY_NAME,
-            title="<b>DMM 女优排行榜: </b>" + title,
+            title="<b>DMM Search actor: </b>" + title,
             objs=objs,
             page_btns=page_btns,
         )
